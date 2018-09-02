@@ -28,9 +28,12 @@ public class SplashActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if(requestCode == RC_SIGN_IN){
             if(resultCode == RESULT_OK){
-                //TODO: Go to homeActivity
+                // TODO : go to home activity
+                Intent intent = new Intent(this, UserProfileActivity.class);
+                startActivity(intent);
             }
             else if(resultCode == RESULT_CANCELED){
                 Toast.makeText(this,"Sign in canceled", Toast.LENGTH_SHORT).show();
@@ -42,7 +45,9 @@ public class SplashActivity extends Activity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         if(user != null){
-            //TODO: Go to homeActivity
+            // TODO : go to home activity
+            Intent intent = new Intent(this, UserProfileActivity.class);
+            startActivity(intent);
             Toast.makeText(this, user.getDisplayName(), Toast.LENGTH_SHORT).show();
         }
         else {
