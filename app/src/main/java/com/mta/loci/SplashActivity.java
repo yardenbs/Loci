@@ -32,7 +32,7 @@ public class SplashActivity extends Activity {
         if(requestCode == RC_SIGN_IN){
             if(resultCode == RESULT_OK){
                 // TODO : go to home activity
-                Intent intent = new Intent(this, UserProfileActivity.class);
+                Intent intent = new Intent( SplashActivity.this, HomeActivity.class);
                 startActivity(intent);
             }
             else if(resultCode == RESULT_CANCELED){
@@ -46,7 +46,7 @@ public class SplashActivity extends Activity {
 
         if(user != null){
             // TODO : go to home activity
-            Intent intent = new Intent(this, UserProfileActivity.class);
+            Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
             startActivity(intent);
             Toast.makeText(this, user.getDisplayName(), Toast.LENGTH_SHORT).show();
         }
