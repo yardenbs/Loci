@@ -3,19 +3,14 @@ package com.mta.loci;
 
 
 import android.location.Location;
-import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.RestrictTo;
 
-import com.firebase.ui.auth.data.model.User;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.time.Instant;
 import java.util.Date;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -37,7 +32,7 @@ public class Post implements Parcelable {
 
     long PostId;
     private FirebaseUser mUser; //user who made the post TODO: change to LociUser type
-    private LatLng mlatlng; //where the post was made
+    private LatLng mLatlng; //where the post was made
 
     //TODO: remove the right part to the class that makes the post!
     private long mDatePosted = System.currentTimeMillis()/1000; //in seconds!; // for purging purposes
@@ -56,14 +51,14 @@ public class Post implements Parcelable {
         mMediaUrl = url;
         mMediaType = mediaType;
         mUser = creator;
-        mlatlng = new LatLng(lat,lng);
+        mLatlng = new LatLng(lat,lng);
         mDatePosted = System.currentTimeMillis()/1000; //in seconds!
         mMediaPlayer = MediaPlayerFactory.createMediaPlayer(mediaType, url);
     }
 
     //generates a marker from the post data
     public MarkerOptions generateMarkerOptions() {
-        MarkerOptions mo = new MarkerOptions().position(this.mlatlng)
+        MarkerOptions mo = new MarkerOptions().position(this.mLatlng)
                 .title(mUser.getDisplayName()); //TODO    .icon(); need to get the user's icon here
 
         return mo;
@@ -87,17 +82,20 @@ public class Post implements Parcelable {
         return mIsLocked;
     }
 
+    //returns true if a Loci has JUST been UNLOCKED, if already unlocked or still locked returns false.
     public boolean attemptUnlock(Location myPos){
         float[] results = new float[2];
 
-        if ( mIsLocked) {
-            Location.distanceBetween(myPos.getLatitude(), myPos.getLongitude(), mlatlng.latitude, mlatlng.longitude, results);
+        if (mIsLocked) {
+            Location.distanceBetween(myPos.getLatitude(), myPos.getLongitude(), mLatlng.latitude, mLatlng.longitude, results);
+            boolean prevVal =  mIsLocked;
+            mIsLocked = (results[0] > MINIMUM_UNLOCKING_DISTANCE); // are we close enough to unlock ???
 
-            return !(mIsLocked = results[0] > MINIMUM_UNLOCKING_DISTANCE);
+            return prevVal == mIsLocked;
         }
 
         //already unlocked
-        return true;
+        return false;
     }
 
     @Override

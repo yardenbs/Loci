@@ -281,9 +281,22 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapView.onLowMemory();
     }
 
+    //@Yarden @Zuf This is where we check if we can unlock a nearby Loci:
     @Override
     public void onLocationChanged(Location location) {
+        Log.d(TAG, "onLocationChanged: enter");
         mCurrLocation = new Location(location);
+        //@Yarden @Zuf TODO: remove this after the user has the Posts List
+        LociUser thisUser = new LociUser();
+        //until here
+
+        for (Post post : thisUser.friendsPosts ){
+            post.attemptUnlock(mCurrLocation);
+            //the above statement returns TRUE when a post has been changed from locked to unlocked!
+            // so... TODO: add 'toast' or notification for user that he unlocked a new Loci!
+        }
+
+        Log.d(TAG, "onLocationChanged: done");
     }
 
     @Override
