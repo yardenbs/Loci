@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
-public class HomeActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
+public class HomeActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener, GoogleMap.OnInfoWindowLongClickListener {
 
     private final String TAG = this.getClass().getName();
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
@@ -91,19 +91,6 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
                             moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
                                     DEFAULT_ZOOM);
                             updateLocationAddress(currentLocation);
-                            /*
-                            *
-                            BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_launcher);
-
-                            MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()))
-                                    .title("Current Location")
-                                    .snippet("Thinking of finding some thing...")
-                                    .icon(icon);
-
-                            gmap.addMarker(markerOptions);
-                            *
-                            * */
-
                         } else {
                             Log.e(TAG, "onComplete: current location is null");
                             Toast.makeText(HomeActivity.this, "Unable to get current location", Toast.LENGTH_SHORT).show();
@@ -116,7 +103,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    //refactor
+    // refactor
     private void getLocationPermission() {
         Log.d(TAG, "getLocationPermission: enter");
         String[] permissions = {FINE_LOCATION,
@@ -138,7 +125,6 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
                     LOCATION_PERMISSION_REQUEST_CODE);
         }
         Log.d(TAG, "getLocationPermission: done");
-
     }
 
     private void moveCamera(LatLng latLng, float zoom) {
@@ -146,31 +132,26 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
     }
 
-
     private void addMarkers(List<Marker> markers) {
-        //for (Marker marker : markers) {
-        //    gmap.addMarker(new MarkerOptions().position(marker.getPosition()));
-        //    //add the marker ( Post actually ! ) to an Array<Post> to be stored in memory for the current use. later to be dumped.
-        //    //how many to display at a time? should there be a simple scoring method OR a filtering option?
-        //}
-        Random rand = new Random();
-        addMarkerTest(rand.nextInt(22)+4);
 
-    }
+        //user should have all his posts and the posts of the people he follows uploaded when he logged in ! @Yarden @Zuf
+        // so the following needs to be removed:
+        LociUser thisUser = new LociUser();
+        //until here
 
-    public void addMarkerTest(int numMarkers) {
+        Marker currMarker;
 
-        MarkerOptions mo = new MarkerOptions();
-        Random rand = new Random();
-        for ( int i = 0; i<numMarkers; i++){
-            double offset1 = (rand.nextInt(2)*(-2) + 1) * (double)rand.nextInt(10) / ((rand.nextInt(4)+1)*750);
-            double offset2 = (rand.nextInt(2)*(-2) + 1) * (double)rand.nextInt(10) / ((rand.nextInt(4)+1)*750);
-            mo.position(new LatLng(mCurrLocation.getLatitude()+offset1, mCurrLocation.getLongitude()+offset2))
-                    .title("marker " + i);
-            gmap.addMarker(mo);
+        for ( Post post : thisUser.friendsPosts){
+
+            if( post.isOldPost()) {
+                continue;
+            }
+
+            MarkerOptions mo = post.generateMarkerOptions();
+            currMarker = gmap.addMarker(mo);
+            currMarker.setTag(post); //this is what needs to be called when user clicks on the InfoWindow!!!
         }
     }
-
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -191,10 +172,12 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
             gmap.setMyLocationEnabled(true);
             gmap.setMinZoomPreference(MIN_ZOOM);
 
-
             //add all the markers/posts here!
             addMarkers(null);
             //
+
+            // Set a listener for info window events.
+            gmap.setOnInfoWindowLongClickListener(this);
         }
     }
 
@@ -300,7 +283,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onLocationChanged(Location location) {
-        mCurrLocation= new Location(location);
+        mCurrLocation = new Location(location);
     }
 
     @Override
@@ -316,5 +299,11 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onProviderDisabled(String provider) {
 
+    }
+
+    @Override
+    public void onInfoWindowLongClick(Marker marker) {
+        Post post = (Post) marker.getTag();
+        // post ==> playMedia(); // TODO: replace this statement with a call to the Post Viewing activity, and send the post as an intent
     }
 }

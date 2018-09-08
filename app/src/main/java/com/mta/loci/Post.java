@@ -2,6 +2,8 @@ package com.mta.loci;
 
 
 
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -12,6 +14,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.time.Instant;
 import java.util.Date;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -20,7 +24,8 @@ public class Post implements Parcelable {
     public static final Parcelable.Creator<Post> CREATOR = new Parcelable.Creator<Post>() {
         @Override
         public Post createFromParcel(Parcel in) {
-            return new Post( in.readDouble(), in.readDouble(), in.readString(),  in.readString() ); // Todo: add params!
+            //return new Post( ); // Todo: add params!
+            return null;
         }
 
         @Override
@@ -31,39 +36,37 @@ public class Post implements Parcelable {
 
 
     long PostId;
-    private FirebaseUser mUser; //user who made the post
+    private FirebaseUser mUser; //user who made the post TODO: change to LociUser type
     private LatLng mlatlng; //where the post was made
-    private Date mDatePosted; // for purging purposes
+
+    //TODO: remove the right part to the class that makes the post!
+    private long mDatePosted = System.currentTimeMillis()/1000; //in seconds!; // for purging purposes
+    private final long SECONDS_IN_DAY = 24*60*60;
+    private final int MINIMUM_UNLOCKING_DISTANCE = 15;
     private String mMediaUrl;
     private String mMediaType;
-
+    private boolean mIsLocked = true;
     public MediaPlayer mMediaPlayer;
     private boolean mKill = false;
 
-
-    Post(double lat, double lng, String url, String mediaType) {
+    Post(boolean isLocked, long datePosted, double lat, double lng, String url, String mediaType, FirebaseUser creator) {
         //
         // TODO: PostId initialize
         //
         mMediaUrl = url;
         mMediaType = mediaType;
-        mUser = FirebaseAuth.getInstance().getCurrentUser();
+        mUser = creator;
         mlatlng = new LatLng(lat,lng);
-        mDatePosted = new Date();
+        mDatePosted = System.currentTimeMillis()/1000; //in seconds!
         mMediaPlayer = MediaPlayerFactory.createMediaPlayer(mediaType, url);
     }
 
     //generates a marker from the post data
-    private MarkerOptions generateMarkerFromPost() {
+    public MarkerOptions generateMarkerOptions() {
         MarkerOptions mo = new MarkerOptions().position(this.mlatlng)
                 .title(mUser.getDisplayName()); //TODO    .icon(); need to get the user's icon here
 
         return mo;
-    }
-
-
-    public String getMedia(){
-        return mMediaUrl;
     }
 
     // @Yarden @Zuf
@@ -76,6 +79,26 @@ public class Post implements Parcelable {
         return this.mKill;
     }
 
+    public boolean isOldPost(){
+        return new Date().after(new Date(mDatePosted + SECONDS_IN_DAY));
+    }
+
+    public boolean isLocked(){
+        return mIsLocked;
+    }
+
+    public boolean attemptUnlock(Location myPos){
+        float[] results = new float[2];
+
+        if ( mIsLocked) {
+            Location.distanceBetween(myPos.getLatitude(), myPos.getLongitude(), mlatlng.latitude, mlatlng.longitude, results);
+
+            return !(mIsLocked = results[0] > MINIMUM_UNLOCKING_DISTANCE);
+        }
+
+        //already unlocked
+        return true;
+    }
 
     @Override
     public int describeContents() {
