@@ -74,7 +74,22 @@ public class Post implements Parcelable {
         return this.mKill;
     }
 
-    public boolean isOldPost(){
+    public boolean requestKill(){
+
+        if (mKill){
+            return true;
+        }
+
+        if (this.isOldPost()){
+            mKill = true;
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean isOldPost(){
         return new Date().after(new Date(mDatePosted + SECONDS_IN_DAY));
     }
 

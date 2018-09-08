@@ -143,7 +143,8 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         for ( Post post : thisUser.friendsPosts){
 
-            if( post.isOldPost()) {
+            if (post.requestKill()){
+                //TODO add method to remove this post from my list and from the database
                 continue;
             }
 
