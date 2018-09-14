@@ -137,20 +137,21 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         //user should have all his posts and the posts of the people he follows uploaded when he logged in ! @Yarden @Zuf
         // so the following needs to be removed:
         LociUser thisUser = new LociUser();
+        List<Post> userFriendsPosts = thisUser.friendsPosts;
+        Marker currMarker;
         //until here
 
-        Marker currMarker;
+        if (userFriendsPosts != null) {
+            for (Post post : userFriendsPosts) {
+                if (post.requestKill()) {
+                    //TODO add method to remove this post from my list and from the database
+                    continue;
+                }
 
-        for ( Post post : thisUser.friendsPosts){
-
-            if (post.requestKill()){
-                //TODO add method to remove this post from my list and from the database
-                continue;
+                MarkerOptions mo = post.generateMarkerOptions();
+                currMarker = gmap.addMarker(mo);
+                currMarker.setTag(post); //this is what needs to be called when user clicks on the InfoWindow!!!
             }
-
-            MarkerOptions mo = post.generateMarkerOptions();
-            currMarker = gmap.addMarker(mo);
-            currMarker.setTag(post); //this is what needs to be called when user clicks on the InfoWindow!!!
         }
     }
 
@@ -205,12 +206,12 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
             @SuppressLint("MissingPermission") Location location = mLocationManager.getLastKnownLocation(mProvider);
             mLocationManager.requestLocationUpdates(mProvider, 200, 1, this);
 
-            if(location!=null)
+            if (location != null)
                 onLocationChanged(location);
             else
                 Toast.makeText(getBaseContext(), "Location can't be retrieved", Toast.LENGTH_SHORT).show();
 
-        }else{
+        } else {
             Toast.makeText(getBaseContext(), "No Provider Found", Toast.LENGTH_SHORT).show();
         }
 
@@ -289,14 +290,16 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         mCurrLocation = new Location(location);
         //@Yarden @Zuf TODO: remove this after the user has the Posts List
         LociUser thisUser = new LociUser();
+        List<Post> userFriendsPosts = thisUser.friendsPosts;
         //until here
 
-        for (Post post : thisUser.friendsPosts ){
-            post.attemptUnlock(mCurrLocation);
-            //the above statement returns TRUE when a post has been changed from locked to unlocked!
-            // so... TODO: add 'toast' or notification for user that he unlocked a new Loci!
+        if (userFriendsPosts != null) {
+            for (Post post : userFriendsPosts) {
+                post.attemptUnlock(mCurrLocation);
+                //the above statement returns TRUE when a post has been changed from locked to unlocked!
+                // so... TODO: add 'toast' or notification for user that he unlocked a new Loci!
+            }
         }
-
         Log.d(TAG, "onLocationChanged: done");
     }
 
