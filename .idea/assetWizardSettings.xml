@@ -18,7 +18,10 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="foregroundImage" value="C:\Users\123am\Desktop\Loci Design Mockup\house.png" />
+                                      <entry key="backgroundLayerName" value="ic_launcher_background" />
+                                      <entry key="foregroundImage" value="C:\Users\zufpi\Downloads\if_jee-66_2180674.png" />
+                                      <entry key="foregroundLayerName" value="ic_launcher_foreground" />
+                                      <entry key="outputName" value="ic_home" />
                                     </map>
                                   </option>
                                 </PersistentState>
