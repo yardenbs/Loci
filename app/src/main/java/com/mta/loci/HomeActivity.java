@@ -3,6 +3,7 @@ package com.mta.loci;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Criteria;
@@ -14,6 +15,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 
@@ -35,11 +38,15 @@ import com.google.android.gms.tasks.Task;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 
 public class HomeActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener, GoogleMap.OnInfoWindowLongClickListener {
 
     private final String TAG = this.getClass().getName();
+    private static final String LOCI_USER_CODE = "0";
+    private static final String USER_POSTS_CODE = "1";
+    private static final String TOTAL_POSTS_CODE = "2";
+    private static final String UNLOCKED_POSTS_CODE = "3";
+
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
@@ -54,6 +61,46 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LocationManager mLocationManager;
     private Location mCurrLocation;
     private String mProvider;
+
+    // User needs to be initialized in OnCreate: //fix
+    private LociUser mUser;
+
+    private Button mButtonHome;
+    private Button mButtonSearch;
+    private Button mButtonPost;
+    private Button mButtonFeed;
+    private Button mButtonUserProfile;
+
+    private void InitUI() {
+        setContentView(R.layout.activity_home);
+        InitButtoms();
+    }
+
+    private void InitButtoms() {
+        mButtonHome = (Button) findViewById(R.id.buttonHome);
+        mButtonSearch = (Button) findViewById(R.id.buttonSearch);
+        mButtonPost = (Button) findViewById(R.id.buttonPost);
+        mButtonFeed = (Button) findViewById(R.id.buttonFeed);
+        mButtonUserProfile = (Button) findViewById(R.id.buttonUserProfile);
+
+        // test //fix
+        mUser = new LociUser();
+
+        mButtonUserProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), UserProfileActivity.class);
+
+                // Parsing the Loci user field by field in order to load to intent:
+                // fix - need to load user image url and more...
+                intent.putExtra(LOCI_USER_CODE, mUser.GetUserId());
+                intent.putExtra(USER_POSTS_CODE, mUser.GetUserPostsIds());
+                intent.putExtra(TOTAL_POSTS_CODE, mUser.GetTotalPostsIds());
+                intent.putExtra(UNLOCKED_POSTS_CODE, mUser.GetUnlockedPostsIds());
+                startActivity(intent);
+            }
+        });
+    }
 
     private void updateLocationAddress(Location location) {
 
@@ -136,23 +183,23 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         //user should have all his posts and the posts of the people he follows uploaded when he logged in ! @Yarden @Zuf
         // so the following needs to be removed:
-        LociUser thisUser = new LociUser();
-        List<Post> userFriendsPosts = thisUser.friendsPosts;
-        Marker currMarker;
-        //until here
-
-        if (userFriendsPosts != null) {
-            for (Post post : userFriendsPosts) {
-                if (post.requestKill()) {
-                    //TODO add method to remove this post from my list and from the database
-                    continue;
-                }
-
-                MarkerOptions mo = post.generateMarkerOptions();
-                currMarker = gmap.addMarker(mo);
-                currMarker.setTag(post); //this is what needs to be called when user clicks on the InfoWindow!!!
-            }
-        }
+        //LociUser thisUser = new LociUser();
+        //List<Post> userFriendsPosts = thisUser.;
+        //Marker currMarker;
+        ////until here
+//
+        //if (userFriendsPosts != null) {
+        //    for (Post post : userFriendsPosts) {
+        //        if (post.RequestKill()) {
+        //            //TODO add method to remove this post from my list and from the database
+        //            continue;
+        //        }
+//
+        //        MarkerOptions mo = post.GenerateMarkerOptions();
+        //        currMarker = gmap.addMarker(mo);
+        //        currMarker.setTag(post); //this is what needs to be called when user clicks on the InfoWindow!!!
+        //    }
+        //}
     }
 
     @Override
@@ -188,8 +235,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "--> HomeActivity --> onCreate");
-        setContentView(R.layout.activity_home);
-
+        InitUI();
         while (!mLocationPermissionsGranted)
             getLocationPermission();
 
@@ -289,17 +335,17 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         Log.d(TAG, "onLocationChanged: enter");
         mCurrLocation = new Location(location);
         //@Yarden @Zuf TODO: remove this after the user has the Posts List
-        LociUser thisUser = new LociUser();
-        List<Post> userFriendsPosts = thisUser.friendsPosts;
-        //until here
-
-        if (userFriendsPosts != null) {
-            for (Post post : userFriendsPosts) {
-                post.attemptUnlock(mCurrLocation);
-                //the above statement returns TRUE when a post has been changed from locked to unlocked!
-                // so... TODO: add 'toast' or notification for user that he unlocked a new Loci!
-            }
-        }
+        //LociUser thisUser = new LociUser();
+        //List<Post> userFriendsPosts = thisUser.mFriendsPosts;
+        ////until here
+//
+        //if (userFriendsPosts != null) {
+        //    for (Post post : userFriendsPosts) {
+        //        post.AttemptUnlock(mCurrLocation);
+        //        //the above statement returns TRUE when a post has been changed from locked to unlocked!
+        //        // so... TODO: add 'toast' or notification for user that he unlocked a new Loci!
+        //    }
+        //}
         Log.d(TAG, "onLocationChanged: done");
     }
 

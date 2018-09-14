@@ -57,7 +57,7 @@ public class Post implements Parcelable {
     }
 
     //generates a marker from the post data
-    public MarkerOptions generateMarkerOptions() {
+    public MarkerOptions GenerateMarkerOptions() {
         MarkerOptions mo = new MarkerOptions().position(this.mLatlng)
                 .title(mUser.getDisplayName()); //TODO    .icon(); need to get the user's icon here
 
@@ -74,13 +74,13 @@ public class Post implements Parcelable {
         return this.mKill;
     }
 
-    public boolean requestKill(){
+    public boolean RequestKill(){
 
         if (mKill){
             return true;
         }
 
-        if (this.isOldPost()){
+        if (this.GetIsOldPost()){
             mKill = true;
 
             return true;
@@ -89,16 +89,16 @@ public class Post implements Parcelable {
         return false;
     }
 
-    private boolean isOldPost(){
+    private boolean GetIsOldPost(){
         return new Date().after(new Date(mDatePosted + SECONDS_IN_DAY));
     }
 
-    public boolean isLocked(){
+    public boolean GetIsLocked(){
         return mIsLocked;
     }
 
     //returns true if a Loci has JUST been UNLOCKED, if already unlocked or still locked returns false.
-    public boolean attemptUnlock(Location myPos){
+    public boolean AttemptUnlock(Location myPos){
         float[] results = new float[2];
 
         if (mIsLocked) {
@@ -119,7 +119,5 @@ public class Post implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
-
-    }
+    public void writeToParcel(Parcel dest, int flags) {}
 }
