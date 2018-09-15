@@ -38,7 +38,7 @@
 
         <activity android:name=".PostMakerActivity" />
         <activity
-            android:name=".friendListActivity"
+            android:name=".FriendListActivity"
             android:label="@string/title_activity_firend_list" />
         <activity
             android:name=".NotificationsActivity"
