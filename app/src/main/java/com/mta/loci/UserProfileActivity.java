@@ -17,8 +17,8 @@ import java.util.Vector;
 
 public class UserProfileActivity extends AppCompatActivity {
     private LociUser mUser;
-    private GridView mGridView;
-    private GridViewAdapter mGridAdapter;
+    private StaticGridView mStaticGridView;
+    private GridViewAdapter mStaticGridAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,11 +43,10 @@ public class UserProfileActivity extends AppCompatActivity {
 
     private void InitGridView() {
 
-        mGridView = (GridView) findViewById(R.id.gridView);
-        mGridAdapter = new GridViewAdapter(this, R.layout.grid_item_layout, getData());
-        mGridView.setAdapter(mGridAdapter);
-
-        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mStaticGridView = (StaticGridView) findViewById(R.id.staticGridView);
+        mStaticGridAdapter = new GridViewAdapter(this, R.layout.grid_item_layout, getData());
+        mStaticGridView.setAdapter(mStaticGridAdapter);
+        mStaticGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ImageItem item = (ImageItem) parent.getItemAtPosition(position);
                 // Create intent to load Post Activity and add the clicked image info:
