@@ -1,7 +1,6 @@
 package com.mta.loci;
 
 import android.content.ContentResolver;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -24,8 +23,9 @@ public class PhotoPlayer extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         InitUI();
 
-        Intent intent = getIntent();
-        String imageUriString = intent.getExtras().getString("imageUri");
+        String imageUriString = getIntent().getExtras().getString("imageUri");
+        if (imageUriString == null)
+            Log.e("IMAGE URI IS NULL","NULL");
         mTakenImageUri = Uri.parse(imageUriString);
         LoadAndDisplayTakenImage();
     }

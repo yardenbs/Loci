@@ -105,7 +105,7 @@ public class PostMakerActivity extends AppCompatActivity {
         mDisplayContentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(PostMakerActivity.this,PhotoPlayer.class);
+                Intent intent = new Intent(view.getContext(),PhotoPlayer.class);
                 intent.putExtra("imageUri", mOutputImgUri);
                 startActivity(intent);
             }
