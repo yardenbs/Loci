@@ -31,7 +31,6 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
@@ -50,8 +49,12 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
+    private static final String WRITE_EXTERNAL_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private Boolean mLocationPermissionsGranted = false;
+    private Boolean mWriteExternalPermissionsGranted = false;
+
     private MapView mapView;
     private GoogleMap gmap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
@@ -74,10 +77,10 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void InitUI() {
         setContentView(R.layout.activity_home);
-        InitButtoms();
+        InitButtons();
     }
 
-    private void InitButtoms() {
+    private void InitButtons() {
         mButtonHome = (Button) findViewById(R.id.buttonHome);
         mButtonSearch = (Button) findViewById(R.id.buttonSearch);
         mButtonPost = (Button) findViewById(R.id.buttonPost);
@@ -168,11 +171,10 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     // refactor
-    private void getLocationPermission() {
-        Log.d(TAG, "getLocationPermission: enter");
+    private void getPermissions() {
+        Log.d(TAG, "getPermissions: enter");
         String[] permissions = {FINE_LOCATION,
                 COURSE_LOCATION};
-
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
                 FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
@@ -188,7 +190,20 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
                     permissions,
                     LOCATION_PERMISSION_REQUEST_CODE);
         }
-        Log.d(TAG, "getLocationPermission: done");
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            mWriteExternalPermissionsGranted = true;
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        }
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                CAMERA_SERVICE) == PackageManager.PERMISSION_GRANTED) {
+            mWriteExternalPermissionsGranted = true;
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
+        }
+        Log.d(TAG, "getPermissions: done");
+
     }
 
     private void moveCamera(LatLng latLng, float zoom) {
@@ -254,7 +269,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         Log.d(TAG, "--> HomeActivity --> onCreate");
         InitUI();
         while (!mLocationPermissionsGranted)
-            getLocationPermission();
+            getPermissions();
 
         // Getting LocationManager object
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -279,7 +294,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
         while (!mLocationPermissionsGranted)
-            getLocationPermission();
+            getPermissions();
         if (mLocationPermissionsGranted) {
             Bundle mapViewBundle = null;
             if (savedInstanceState != null) {

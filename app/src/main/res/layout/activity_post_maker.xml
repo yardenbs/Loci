@@ -4,6 +4,62 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#000"
     tools:context=".PostMakerActivity">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/takePictureButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="#000"
+            android:padding="20dp"
+            android:text="TAKE PICTURE"
+            android:textColor="#FFF" />
+
+        <Button
+            android:id="@+id/shootVideoButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="#000"
+            android:padding="20dp"
+            android:text="SHOOT VIDEO"
+            android:textColor="#FFF" />
+
+        <Button
+            android:id="@+id/writeTextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="#000"
+            android:padding="20dp"
+            android:text="WRITE TEXT"
+            android:textColor="#FFF" />
+
+        <Button
+            android:id="@+id/recordVoiceButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="#000"
+            android:padding="20dp"
+            android:text="RECORD VOICE"
+            android:textColor="#FFF" />
+
+        <Button
+            android:id="@+id/displayContentButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="#000"
+            android:padding="20dp"
+            android:text="DISPLAY CONTENT"
+            android:textColor="#FFF" />
+    </LinearLayout>
 </android.support.constraint.ConstraintLayout>
