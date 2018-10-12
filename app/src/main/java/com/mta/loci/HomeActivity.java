@@ -46,6 +46,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final String USER_POSTS_CODE = "1";
     private static final String TOTAL_POSTS_CODE = "2";
     private static final String UNLOCKED_POSTS_CODE = "3";
+    private static final String LAT_LNG = "4";
 
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
@@ -97,6 +98,22 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
                 intent.putExtra(USER_POSTS_CODE, mUser.GetUserPostsIds());
                 intent.putExtra(TOTAL_POSTS_CODE, mUser.GetTotalPostsIds());
                 intent.putExtra(UNLOCKED_POSTS_CODE, mUser.GetUnlockedPostsIds());
+                startActivity(intent);
+            }
+        });
+
+        mButtonPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), PostMakerActivity.class);
+
+                // Parsing the Loci user field by field in order to load to intent:
+                // fix - need to load user image url and more...
+                intent.putExtra(LOCI_USER_CODE, mUser.GetUserId());
+                intent.putExtra(USER_POSTS_CODE, mUser.GetUserPostsIds());
+                intent.putExtra(TOTAL_POSTS_CODE, mUser.GetTotalPostsIds());
+                intent.putExtra(UNLOCKED_POSTS_CODE, mUser.GetUnlockedPostsIds());
+                intent.putExtra(LAT_LNG, mCurrLocation);
                 startActivity(intent);
             }
         });

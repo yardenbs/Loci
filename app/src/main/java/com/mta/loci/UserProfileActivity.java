@@ -24,16 +24,8 @@ public class UserProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
-        InitUserFromIntent(getIntent());
+        LociUtil.InitUserFromIntent(getIntent(), mUser);
         InitUI();
-    }
-
-    private void InitUserFromIntent(Intent intent) {
-        mUser = new LociUser();
-        mUser.SetUserId(intent.getIntExtra("0", -1));
-        mUser.SetUserPostsIds(intent.getIntegerArrayListExtra("1"));
-        mUser.SetTotalPostsIds(intent.getIntegerArrayListExtra("2"));
-        mUser.SetUnlockedPostsIds(intent.getIntegerArrayListExtra("3"));
     }
 
     private void InitUI() {
