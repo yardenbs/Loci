@@ -1,20 +1,20 @@
 package com.mta.loci;
 
 import java.util.ArrayList;
-import java.util.Vector;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 public class LociUser implements Parcelable {
 
+    private String Name;
     private int mUserId;
     private ArrayList<Integer> mUserPostsIds;
     private ArrayList<Integer> mTotalPostsIds;
     private ArrayList<Integer> mUnlockedPostsIds;
 
     public LociUser() {
-        mUserId = 10;
+        mUserId = 10; // TODO: get unique user id from Firebase
         mUserPostsIds = new ArrayList<>();
         mTotalPostsIds = new ArrayList<>();
         mUnlockedPostsIds = new ArrayList<>();
@@ -27,6 +27,13 @@ public class LociUser implements Parcelable {
         mUserPostsIds.add(1);
     }
 
+    public String getName() {
+        return Name;
+    }
+
+    public void setName(String name) {
+        Name = name;
+    }
     public Integer GetUserId() {
         return mUserId;
     }

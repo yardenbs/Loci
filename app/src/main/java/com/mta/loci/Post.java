@@ -13,8 +13,11 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Date;
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public class Post implements Parcelable {
+
+    long PostId;
+    private FirebaseUser mUser; //user who made the post TODO: change to LociUser type
+    private LatLng mLatlng; //where the post was made
 
     public static final Parcelable.Creator<Post> CREATOR = new Parcelable.Creator<Post>() {
         @Override
@@ -29,10 +32,13 @@ public class Post implements Parcelable {
         }
     };
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
-    long PostId;
-    private FirebaseUser mUser; //user who made the post TODO: change to LociUser type
-    private LatLng mLatlng; //where the post was made
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {}
 
     //TODO: remove the right part to the class that makes the post!
     private long mDatePosted = System.currentTimeMillis()/1000; //in seconds!; // for purging purposes
@@ -93,31 +99,4 @@ public class Post implements Parcelable {
         return new Date().after(new Date(mDatePosted + SECONDS_IN_DAY));
     }
 
-    public boolean GetIsLocked(){
-        return mIsLocked;
-    }
-
-    //returns true if a Loci has JUST been UNLOCKED, if already unlocked or still locked returns false.
-    public boolean AttemptUnlock(Location myPos){
-        float[] results = new float[2];
-
-        if (mIsLocked) {
-            Location.distanceBetween(myPos.getLatitude(), myPos.getLongitude(), mLatlng.latitude, mLatlng.longitude, results);
-            boolean prevVal =  mIsLocked;
-            mIsLocked = (results[0] > MINIMUM_UNLOCKING_DISTANCE); // are we close enough to unlock ???
-
-            return prevVal == mIsLocked;
-        }
-
-        //already unlocked
-        return false;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {}
 }

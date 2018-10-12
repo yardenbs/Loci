@@ -23,18 +23,6 @@
         android:layout_height="0dp"
         android:background="#000" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButtonAddPost"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="38dp"
-        android:clickable="true"
-        android:focusable="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_add" />
-
     <android.support.v7.widget.LinearLayoutCompat
         android:id="@+id/linearLayoutButtons"
         android:layout_width="match_parent"
@@ -104,6 +92,8 @@
             android:layout_weight="1"
             android:fontFamily="sans-serif"
             android:text="PROFILE"
+
+
             android:textColor="#C06CB4"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
