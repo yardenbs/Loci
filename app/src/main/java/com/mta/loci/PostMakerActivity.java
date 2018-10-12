@@ -106,7 +106,8 @@ public class PostMakerActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(),PhotoPlayer.class);
-                intent.putExtra("imageUri", mOutputImgUri);
+                intent.putExtra("1",1);
+                intent.putExtra("imageUri", mOutputImgUri.toString());
                 startActivity(intent);
             }
         });
