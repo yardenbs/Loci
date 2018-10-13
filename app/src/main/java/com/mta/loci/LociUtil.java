@@ -22,7 +22,6 @@ import java.util.Locale;
 class LociUtil {
 
     private static LociUser mLociUser = new LociUser();
-    private static Post mPost = new Post();
 
     public static void InitUserFromIntent(Intent intent, LociUser mUser) {
         mUser = new LociUser();
@@ -74,23 +73,5 @@ class LociUtil {
         return mLociUser;
     }
 
-    public static Post getPostFromDatabase(final String postId ) {
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference databasePosts = database.getReference("posts");
-
-        databasePosts.child(postId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                mPost = dataSnapshot.getValue(Post.class);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e(LociUtil.class.getSimpleName(), "loadPost:onCancelled", databaseError.toException());
-            }
-        });
-
-        return mPost;
-    }
 }
