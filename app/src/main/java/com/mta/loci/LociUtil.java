@@ -54,7 +54,7 @@ class LociUtil {
         return null;
     }
 
-    public static String getUserNameFromDatabase(final String uid ) {
+    public static LociUser getUserFromDatabase(final String uid ) {
         final MutableData lociUserName = null;
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = database.getReference();
@@ -72,6 +72,6 @@ class LociUtil {
         });
 
 
-        return "poop";
+        return mLociUser;
     }
 }

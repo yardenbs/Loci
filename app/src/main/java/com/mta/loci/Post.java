@@ -79,4 +79,16 @@ public class Post implements Parcelable {
     public void setPostId(long postId) {
         PostId = postId;
     }
+
+    public String getCreatorId() {
+        return mCreatorId;
+    }
+
+    public void setCreatorId(String mCreatorId) {
+        this.mCreatorId = mCreatorId;
+    }
+
+    public LatLng getLatlng() {
+        return mLatlng;
+    }
 }
