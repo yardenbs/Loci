@@ -8,6 +8,8 @@ import android.widget.Toast;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,12 +18,14 @@ public class SplashActivity extends Activity {
 
     private static int SPLASH_TIME_OUT = 4000;
     private static int RC_SIGN_IN = 1;
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme_Launcher);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
         login();
     }
 
@@ -31,6 +35,7 @@ public class SplashActivity extends Activity {
 
         if(requestCode == RC_SIGN_IN){
             if(resultCode == RESULT_OK){
+
                 Intent intent = new Intent( SplashActivity.this, HomeActivity.class);
                 startActivity(intent);
 
@@ -45,6 +50,7 @@ public class SplashActivity extends Activity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         if(user != null){
+            writeNewUser(user.getUid());
             Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
             startActivity(intent);
             Toast.makeText(this, user.getDisplayName(), Toast.LENGTH_SHORT).show();
@@ -68,4 +74,11 @@ public class SplashActivity extends Activity {
                         .build(),
                 RC_SIGN_IN);
     }
+
+    private void writeNewUser(String uId) {
+            LociUser lociUser = new LociUser(uId);
+            mDatabase.child("users").child(uId).setValue(lociUser);
+    }
 }
+
+
