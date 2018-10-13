@@ -11,15 +11,13 @@ import android.view.View;
 import android.widget.Button;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.File;
 import java.io.IOException;
 
 public class PostMakerActivity extends AppCompatActivity {
 
-
+    private Post mPostToPublish = new Post();
     private LatLng mPostLocation;
     private Button mTakePictureButton;
     private Button mShootVideoButton;
@@ -111,14 +109,5 @@ public class PostMakerActivity extends AppCompatActivity {
         });
     }
 
-    private void uploadPostToDatabase(String url, String mediaType ){
-        DatabaseReference databasePosts = FirebaseDatabase.getInstance().getReference("posts");
 
-        String id = databasePosts.push().getKey();
-        //TODO: replace the following place holder !!!
-        Post post = new Post(id, "replace this string with: mUser.GetUserId()", mPostLocation.latitude, mPostLocation.longitude, url, mediaType);
-
-        databasePosts.child(id).setValue(post);
-
-    }
 }
