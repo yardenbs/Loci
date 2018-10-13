@@ -6,7 +6,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class Post {
 
-    private long PostId;
+    private String id;
     private String mCreatorId; //user who made the post
     private LatLng mLatlng; //where the post was made
     private long mDatePosted; //in seconds!; // for purging purposes
@@ -16,7 +16,7 @@ public class Post {
 
     public Post(){}
 
-    Post(String creatorId, double lat, double lng, String url, String mediaType ) {
+    Post(String id, String creatorId, double lat, double lng, String url, String mediaType ) {
         mCreatorId = creatorId;
         mMediaUrl = url;
         mMediaType = mediaType;
@@ -49,12 +49,8 @@ public class Post {
         return false;
     }
 
-    public long getPostId() {
-        return PostId;
-    }
-
-    public void setPostId(long postId) {
-        PostId = postId;
+    public String getPostId() {
+        return id;
     }
 
     public String getCreatorId() {
@@ -67,5 +63,13 @@ public class Post {
 
     public long getDatePosted(){
         return mDatePosted;
+    }
+
+    public String getMediaUrl() {
+        return mMediaUrl;
+    }
+
+    public String getMediaType() {
+        return mMediaType;
     }
 }
