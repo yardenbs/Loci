@@ -8,13 +8,12 @@ import java.util.ArrayList;
 public class LociUser implements Parcelable {
 
     private String Name;
-    private int mUserId;
+    private String mUserId;
     private ArrayList<Integer> mUserPostsIds;
     private ArrayList<Integer> mTotalPostsIds;
     private ArrayList<Integer> mUnlockedPostsIds;
 
     public LociUser() {
-        mUserId = 10; // TODO: get unique user id from Firebase
         mUserPostsIds = new ArrayList<>();
         mTotalPostsIds = new ArrayList<>();
         mUnlockedPostsIds = new ArrayList<>();
@@ -26,6 +25,10 @@ public class LociUser implements Parcelable {
         mUserPostsIds.add(1);
         mUserPostsIds.add(1);
     }
+    public LociUser(String userId) {
+        mUserId = userId;
+        //TODO add more fhilds
+    }
 
     public String getName() {
         return Name;
@@ -34,11 +37,11 @@ public class LociUser implements Parcelable {
     public void setName(String name) {
         Name = name;
     }
-    public Integer GetUserId() {
+    public String GetUserId() {
         return mUserId;
     }
 
-    public void SetUserId(Integer userId) {
+    public void SetUserId(String userId) {
         mUserId = userId;
     }
 
@@ -85,7 +88,7 @@ public class LociUser implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel out, int flags) {
-        out.writeInt(mUserId);
+        out.writeString(mUserId);
         out.writeList(mUserPostsIds);
         out.writeList(mTotalPostsIds);
         out.writeList(mUnlockedPostsIds);
@@ -106,6 +109,6 @@ public class LociUser implements Parcelable {
         mUnlockedPostsIds = in.readArrayList(null);
         mTotalPostsIds = in.readArrayList(null);
         mUserPostsIds = in.readArrayList( null);
-        mUserId = in.readInt();
+        mUserId = in.readString();
     }
 }
