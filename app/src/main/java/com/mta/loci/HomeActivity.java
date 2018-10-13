@@ -369,15 +369,14 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         //@Yarden @Zuf TODO: remove this after the user has the Posts List
         //LociUser thisUser = new LociUser();
         //List<Post> userFriendsPosts = thisUser.mFriendsPosts;
-        ////until here
-//
-        //if (userFriendsPosts != null) {
-        //    for (Post post : userFriendsPosts) {
-        //        post.AttemptUnlock(mCurrLocation);
-        //        //the above statement returns TRUE when a post has been changed from locked to unlocked!
-        //        // so... TODO: add 'toast' or notification for user that he unlocked a new Loci!
-        //    }
-        //}
+        //until here
+
+//        if (userFriendsPosts != null) {
+//            for (Post post : userFriendsPosts) {
+//                post.AttemptUnlock(mCurrLocation);
+//                // TODO: add 'toast' or notification for user that he unlocked a new Loci!
+//            }
+//        }
         Log.d(TAG, "onLocationChanged: done");
     }
 
@@ -398,7 +397,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onInfoWindowLongClick(Marker marker) {
-        Post post = (Post) marker.getTag();
-        // post ==> playMedia(); // TODO: replace this statement with a call to the Post Viewing activity, and send the post as an intent
+        String postId = (String) marker.getTag();
+        // post ==> playMedia(); // TODO: replace this statement with a call to the Post Viewing activity, and send the postId in the intent
     }
 }

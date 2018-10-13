@@ -13,7 +13,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.MutableData;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
@@ -22,7 +21,7 @@ import java.util.Locale;
 
 class LociUtil {
 
-    public static LociUser mLociUser = null;
+    private static LociUser mLociUser = new LociUser();
 
     public static void InitUserFromIntent(Intent intent, LociUser mUser) {
         mUser = new LociUser();
@@ -55,11 +54,11 @@ class LociUtil {
     }
 
     public static LociUser getUserFromDatabase(final String uid ) {
-        final MutableData lociUserName = null;
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference = database.getReference();
 
-        databaseReference.child("users").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference databaseUsers = database.getReference("users");
+
+        databaseUsers.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mLociUser = dataSnapshot.getValue(LociUser.class);

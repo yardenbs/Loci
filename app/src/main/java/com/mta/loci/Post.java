@@ -2,12 +2,9 @@ package com.mta.loci;
 
 
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.google.android.gms.maps.model.LatLng;
 
-public class Post implements Parcelable {
+public class Post {
 
     private long PostId;
     private String mCreatorId; //user who made the post
@@ -17,35 +14,15 @@ public class Post implements Parcelable {
     private String mMediaType;
     private boolean mKill = false;
 
+    public Post(){}
+
     Post(String creatorId, double lat, double lng, String url, String mediaType ) {
+        mCreatorId = creatorId;
         mMediaUrl = url;
         mMediaType = mediaType;
-        mCreatorId = creatorId;
         mLatlng = new LatLng(lat,lng);
+        mDatePosted = System.currentTimeMillis() / 1000; //current time in seconds!
     }
-
-
-    public static final Parcelable.Creator<Post> CREATOR = new Parcelable.Creator<Post>() {
-        @Override
-        public Post createFromParcel(Parcel in) {
-            //return new Post( ); // Todo: add params!
-            return null;
-        }
-
-        @Override
-        public Post[] newArray(int size) {
-            return new Post[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {}
-
 
     // @Yarden @Zuf
     // when the posts are loaded they are checked in terms of Date that
@@ -63,7 +40,7 @@ public class Post implements Parcelable {
             return true;
         }
 
-        if (PostUtils.GetIsOldPost(mDatePosted)){
+        if (PostUtils.isOldPost(this)){
             mKill = true;
 
             return true;
@@ -84,11 +61,11 @@ public class Post implements Parcelable {
         return mCreatorId;
     }
 
-    public void setCreatorId(String mCreatorId) {
-        this.mCreatorId = mCreatorId;
-    }
-
     public LatLng getLatlng() {
         return mLatlng;
+    }
+
+    public long getDatePosted(){
+        return mDatePosted;
     }
 }
