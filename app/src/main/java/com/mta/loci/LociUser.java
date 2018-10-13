@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class LociUser implements Parcelable {
 
-    private String Name;
+    private String mName;
     private String mUserId;
     private ArrayList<Integer> mUserPostsIds;
     private ArrayList<Integer> mTotalPostsIds;
@@ -25,17 +25,18 @@ public class LociUser implements Parcelable {
         mUserPostsIds.add(1);
         mUserPostsIds.add(1);
     }
-    public LociUser(String userId) {
+    public LociUser(String userId, String name) {
         mUserId = userId;
+        mName = name;
         //TODO add more fhilds
     }
 
     public String getName() {
-        return Name;
+        return mName;
     }
 
     public void setName(String name) {
-        Name = name;
+        mName = name;
     }
     public String GetUserId() {
         return mUserId;

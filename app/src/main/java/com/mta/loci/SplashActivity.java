@@ -18,27 +18,24 @@ public class SplashActivity extends Activity {
 
     private static int SPLASH_TIME_OUT = 4000;
     private static int RC_SIGN_IN = 1;
-    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme_Launcher);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        mDatabase = FirebaseDatabase.getInstance().getReference();
         login();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
 
         if(requestCode == RC_SIGN_IN){
             if(resultCode == RESULT_OK){
-
-                Intent intent = new Intent( SplashActivity.this, HomeActivity.class);
-                startActivity(intent);
-
+                writeNewUser(fUser.getUid(), fUser.getDisplayName());
+                startHomeActivity();
             }
             else if(resultCode == RESULT_CANCELED){
                 Toast.makeText(this,"Sign in canceled", Toast.LENGTH_SHORT).show();
@@ -46,14 +43,17 @@ public class SplashActivity extends Activity {
         }
     }
 
-    private void login() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private void startHomeActivity() {
+        Intent intent = new Intent( SplashActivity.this, HomeActivity.class);
+        startActivity(intent);
+    }
 
-        if(user != null){
-            writeNewUser(user.getUid());
-            Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
-            startActivity(intent);
-            Toast.makeText(this, user.getDisplayName(), Toast.LENGTH_SHORT).show();
+    private void login() {
+        FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        if(fUser != null){
+            startHomeActivity();
+            Toast.makeText(this, fUser.getDisplayName(), Toast.LENGTH_SHORT).show();
         }
         else {
             firebaseUILogin();
@@ -75,9 +75,11 @@ public class SplashActivity extends Activity {
                 RC_SIGN_IN);
     }
 
-    private void writeNewUser(String uId) {
-            LociUser lociUser = new LociUser(uId);
-            mDatabase.child("users").child(uId).setValue(lociUser);
+    private void writeNewUser(String uId, String name) {
+        DatabaseReference usersRef = FirebaseDatabase.getInstance()
+                                    .getReference("Users");
+        LociUser lociUser = new LociUser(uId, name);
+        usersRef.child(uId).setValue(lociUser);
     }
 }
 
