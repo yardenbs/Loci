@@ -89,7 +89,7 @@ public class PostMakerActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(),PhotoPlayer.class);
-                intent.putExtra("imageUri", mOutputImgUri.toString());
+                intent.putExtra("mediaUri", mOutputImgUri.toString());
                 startActivity(intent);
             }
         });
@@ -103,7 +103,7 @@ public class PostMakerActivity extends AppCompatActivity {
                 Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,  // prefix
-                ".jpg",         // suffix
+                ".jpg",    // suffix
                 storageDir      // directory
         );
         return image;

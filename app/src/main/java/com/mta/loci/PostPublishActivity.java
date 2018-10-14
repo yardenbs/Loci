@@ -1,14 +1,21 @@
 package com.mta.loci;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.io.IOException;
 
 public class PostPublishActivity extends AppCompatActivity {
     private final String TAG = this.getClass().getName();
@@ -17,26 +24,27 @@ public class PostPublishActivity extends AppCompatActivity {
     private Button mPublishButton;
     private String mMediaType;
     private String mUrl;
-    private String mMediaUri;
+    private Uri mMediaUri;
+    private ImageView mTakenImageView;
+    private Bitmap mTakenImageBitmap = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        InitUI();
+        Intent intent = getIntent();
+        String imageUriString = intent.getStringExtra("mediaUri");
+        if (imageUriString == null)
+            Log.e("IMAGE URI IS NULL", "NULL");
+        mMediaUri = Uri.parse(imageUriString);
+        LoadAndDisplayTakenImage();
         LociUtil.InitUserFromIntent(getIntent(), mUser);
         mPostLocation = getIntent().getExtras().getParcelable("4");
 
-        //TODO: change this so the image is passed to here (via uri?) and only AFTER publish button click - Load image to DB and retrieve url !!!
-        //mMediaUri = getIntent().getStringExtra("mediaUri");
-
         //TODO: define this in the intent sent to this activity !!!
         mMediaType = getIntent().getStringExtra("mediaType");
-
         setContentView(R.layout.activity_post_publish);
-
-        //TODO: method to present media according to type
-        //initMediaView();
-
-        initMapView(mPostLocation);
         initPublishButton();
     }
 
@@ -52,14 +60,31 @@ public class PostPublishActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                //TODO: create this method:
-                //mUrl = uploadMediaToDatabase();
+                //TODO: create this method: uploadMediaToDatabase
+                //mUrl = PostUtils.uploadMediaToDatabase(Uri uri);
 
                 uploadPostToDatabase(mUrl, mMediaType);
             }
         });
 
         Log.d(TAG, "initPublishButton: end");
+    }
+
+    private void InitUI() {
+        setContentView(R.layout.activity_post_publish);
+        initMapView(mPostLocation);
+        mTakenImageView = findViewById(R.id.imageView);
+    }
+
+    private void LoadAndDisplayTakenImage() {
+        if (mMediaUri != null) {
+            try {
+                mTakenImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), mMediaUri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            mTakenImageView.setImageBitmap(mTakenImageBitmap);
+        }
     }
 
     private void uploadPostToDatabase(String url, String mediaType ){
