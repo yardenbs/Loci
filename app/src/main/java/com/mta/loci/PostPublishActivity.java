@@ -24,8 +24,7 @@ public class PostPublishActivity extends AppCompatActivity {
         DatabaseReference databasePosts = FirebaseDatabase.getInstance().getReference("Posts");
 
         String id = databasePosts.push().getKey();
-        //TODO: replace the following place holder !!!
-        Post post = new Post(id, "replace this string with: mUser.GetUserId()", mPostLocation.latitude, mPostLocation.longitude, url, mediaType);
+        Post post = new Post(id, mUser.GetUserId(), mPostLocation.latitude, mPostLocation.longitude, url, mediaType);
 
         databasePosts.child(id).setValue(post);
 
