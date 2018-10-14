@@ -6,17 +6,20 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 
 public class PhotoPlayer extends AppCompatActivity {
 
     private ImageView mTakenImageView;
     private Uri mTakenImageUri;
+    private Bitmap mTakenImageBitmap = null;
     private static final String TAG_TAKE_PICTURE = "TAKE_PICTURE";
 
     @Override
@@ -39,25 +42,12 @@ public class PhotoPlayer extends AppCompatActivity {
 
     private void LoadAndDisplayTakenImage() {
         if (mTakenImageUri != null) {
-            // Get all camera taken pictures in picture save folder.
-
-
-            // Get content resolver object.
-            ContentResolver contentResolver = getContentResolver();
-
             try {
-                // Open display image input stream.
-                InputStream inputStream = contentResolver.openInputStream(mTakenImageUri);
-
-                // Decode the image input stream to a bitmap use BitmapFactory.
-                Bitmap pictureBitmap = BitmapFactory.decodeStream(inputStream);
-
-                // Set the image bitmap in the image view component to display it.
-                mTakenImageView.setImageBitmap(pictureBitmap);
-
-            } catch (FileNotFoundException ex) {
-                Log.e(TAG_TAKE_PICTURE, ex.getMessage(), ex);
+                mTakenImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), mTakenImageUri);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+            mTakenImageView.setImageBitmap(mTakenImageBitmap);
         }
     }
 }

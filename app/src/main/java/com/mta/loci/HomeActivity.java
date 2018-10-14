@@ -116,7 +116,8 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
                 intent.putExtra(USER_POSTS_CODE, mUser.GetUserPostsIds());
                 intent.putExtra(TOTAL_POSTS_CODE, mUser.GetTotalPostsIds());
                 intent.putExtra(UNLOCKED_POSTS_CODE, mUser.GetUnlockedPostsIds());
-                intent.putExtra(LAT_LNG, new LatLng(mCurrLocation.getLatitude(),mCurrLocation.getLatitude()));
+                if (mCurrLocation != null)
+                    intent.putExtra(LAT_LNG, new LatLng(mCurrLocation.getLatitude(),mCurrLocation.getLatitude()));
                 startActivity(intent);
             }
         });

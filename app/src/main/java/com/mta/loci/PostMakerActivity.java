@@ -3,6 +3,7 @@ package com.mta.loci;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,8 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class PostMakerActivity extends AppCompatActivity {
 
@@ -24,10 +27,8 @@ public class PostMakerActivity extends AppCompatActivity {
     private Button mWriteTextButton;
     private Button mRecoredVoiceButton;
     private Button mDisplayContentButton;
-
     private LociUser mUser;
     private Uri mOutputImgUri;
-    private String mImageFilePath;
 
     // This tag is used for error or debug log.
     private static final String TAG_TAKE_PICTURE = "TAKE_PICTURE";
@@ -35,16 +36,12 @@ public class PostMakerActivity extends AppCompatActivity {
     // This is the request code when start camera activity use implicit intent.
     public static final int REQUEST_CODE_TAKE_PICTURE = 1;
 
-    // Save the camera taken picture in this folder.
-    private File pictureSaveFolderPath;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         InitUI();
         LociUtil.InitUserFromIntent(getIntent(), mUser);
         mPostLocation = getIntent().getExtras().getParcelable("4");
-        mImageFilePath = getFilesDir().getPath().toString() + "/";
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
 
@@ -67,19 +64,8 @@ public class PostMakerActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try {
-                    // Create a random image file name.
-                    String imageFileName = "outputImage_" + System.currentTimeMillis() + ".png";
-
-                    // Construct an output file to save camera taken picture temporary.
-                    File outputImageFile = new File(mImageFilePath, imageFileName);
-
-                    // If cached temporary file exist then delete it.
-                    if (outputImageFile.exists()) {
-                        outputImageFile.delete();
-                    }
-
                     // Create a new temporary file.
-                    outputImageFile.createNewFile();
+                    File outputImageFile = CustomCreateImageFile();
 
                     // Get the output image file Uri wrapper object.
                     mOutputImgUri = Uri.fromFile(outputImageFile);
@@ -90,6 +76,7 @@ public class PostMakerActivity extends AppCompatActivity {
                     // Specify the output image uri for the camera app to save taken picture.
                     cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, mOutputImgUri);
                     // Start the camera activity with the request code and waiting for the app process result.
+                    cameraIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                     startActivityForResult(cameraIntent, REQUEST_CODE_TAKE_PICTURE);
 
                 } catch (IOException ex) {
@@ -102,12 +89,23 @@ public class PostMakerActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(),PhotoPlayer.class);
-                intent.putExtra("1",1);
                 intent.putExtra("imageUri", mOutputImgUri.toString());
                 startActivity(intent);
             }
         });
     }
 
-
+    private File CustomCreateImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  // prefix
+                ".jpg",         // suffix
+                storageDir      // directory
+        );
+        return image;
+    }
 }
