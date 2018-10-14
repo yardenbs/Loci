@@ -49,7 +49,7 @@ class PostUtils {
     public static Post getPostFromDatabase(final String postId ) {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference databasePosts = database.getReference("posts");
+        DatabaseReference databasePosts = database.getReference("Posts");
 
         databasePosts.child(postId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

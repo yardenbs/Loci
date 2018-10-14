@@ -56,7 +56,7 @@ class LociUtil {
     public static LociUser getUserFromDatabase(final String uid ) {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference databaseUsers = database.getReference("users");
+        DatabaseReference databaseUsers = database.getReference("Users");
 
         databaseUsers.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
