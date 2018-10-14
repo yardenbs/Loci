@@ -21,7 +21,7 @@ public class PostPublishActivity extends AppCompatActivity {
     }
 
     private void uploadPostToDatabase(String url, String mediaType ){
-        DatabaseReference databasePosts = FirebaseDatabase.getInstance().getReference("posts");
+        DatabaseReference databasePosts = FirebaseDatabase.getInstance().getReference("Posts");
 
         String id = databasePosts.push().getKey();
         //TODO: replace the following place holder !!!
