@@ -23,8 +23,13 @@ public class PostPublishActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         LociUtil.InitUserFromIntent(getIntent(), mUser);
         mPostLocation = getIntent().getExtras().getParcelable("4");
-        mMediaType = getIntent().getStringExtra("mediaType");
+
+        //TODO: change this so the image is passed to here (via uri?) and only AFTER publish button click - Load image to DB and retrieve url !!!
         mUrl = getIntent().getStringExtra("url");
+
+        //TODO: define this in the intent sent to this activity !!!
+        mMediaType = getIntent().getStringExtra("mediaType");
+
         setContentView(R.layout.activity_post_publish);
         initPublishButton();
     }
