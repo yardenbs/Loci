@@ -41,7 +41,7 @@ public class PostPublishActivity extends AppCompatActivity {
     }
 
     private void initMapView(LatLng mPostLocation) {
-
+        //TODO: get back to this after reinventing the camera! 
     }
 
     private void initPublishButton(){
