@@ -17,6 +17,7 @@ public class PostPublishActivity extends AppCompatActivity {
     private Button mPublishButton;
     private String mMediaType;
     private String mUrl;
+    private String mMediaUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,13 +26,22 @@ public class PostPublishActivity extends AppCompatActivity {
         mPostLocation = getIntent().getExtras().getParcelable("4");
 
         //TODO: change this so the image is passed to here (via uri?) and only AFTER publish button click - Load image to DB and retrieve url !!!
-        mUrl = getIntent().getStringExtra("url");
+        //mMediaUri = getIntent().getStringExtra("mediaUri");
 
         //TODO: define this in the intent sent to this activity !!!
         mMediaType = getIntent().getStringExtra("mediaType");
 
         setContentView(R.layout.activity_post_publish);
+
+        //TODO: method to present media according to type
+        //initMediaView();
+
+        initMapView(mPostLocation);
         initPublishButton();
+    }
+
+    private void initMapView(LatLng mPostLocation) {
+
     }
 
     private void initPublishButton(){
@@ -41,6 +51,10 @@ public class PostPublishActivity extends AppCompatActivity {
         mPublishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //TODO: create this method:
+                //mUrl = uploadMediaToDatabase();
+
                 uploadPostToDatabase(mUrl, mMediaType);
             }
         });
