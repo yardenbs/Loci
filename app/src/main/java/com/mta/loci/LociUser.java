@@ -9,22 +9,16 @@ public class LociUser implements Parcelable {
 
     private String mName;
     private String mUserId;
-    private ArrayList<Integer> mUserPostsIds;
-    private ArrayList<Integer> mTotalPostsIds;
-    private ArrayList<Integer> mUnlockedPostsIds;
+    private ArrayList<String> mUserPostsIds;
+    private ArrayList<String> mTotalPostsIds;
+    private ArrayList<String> mUnlockedPostsIds;
 
     public LociUser() {
         mUserPostsIds = new ArrayList<>();
         mTotalPostsIds = new ArrayList<>();
         mUnlockedPostsIds = new ArrayList<>();
-
-        // text //fix
-        mUserPostsIds.add(1);
-        mUserPostsIds.add(1);
-        mUserPostsIds.add(1);
-        mUserPostsIds.add(1);
-        mUserPostsIds.add(1);
     }
+
     public LociUser(String userId, String name) {
         mUserId = userId;
         mName = name;
@@ -46,39 +40,39 @@ public class LociUser implements Parcelable {
         mUserId = userId;
     }
 
-    public ArrayList<Integer> GetUserPostsIds() {
+    public ArrayList<String> GetUserPostsIds() {
         return mUserPostsIds;
     }
 
-    public void SetUserPostsIds(ArrayList<Integer> userPostsIds) {
+    public void SetUserPostsIds(ArrayList<String> userPostsIds) {
         mUserPostsIds = userPostsIds;
     }
 
-    public ArrayList<Integer> GetTotalPostsIds() {
+    public ArrayList<String> GetTotalPostsIds() {
         return mTotalPostsIds;
     }
 
-    public void SetTotalPostsIds(ArrayList<Integer> totalPostsIds) {
+    public void SetTotalPostsIds(ArrayList<String> totalPostsIds) {
         mTotalPostsIds = totalPostsIds;
     }
 
-    public ArrayList<Integer> GetUnlockedPostsIds() {
+    public ArrayList<String> GetUnlockedPostsIds() {
         return mUnlockedPostsIds;
     }
 
-    public void SetUnlockedPostsIds(ArrayList<Integer> unlockedPostsIds) {
+    public void SetUnlockedPostsIds(ArrayList<String> unlockedPostsIds) {
         mUnlockedPostsIds = unlockedPostsIds;
     }
 
-    public void AddUserPostId(Integer userPostId) {
+    public void AddUserPostId(String userPostId) {
         mUserPostsIds.add(userPostId);
     }
 
-    public void AddTotalPostsId(Integer lockedPostsId) {
+    public void AddTotalPostsId(String lockedPostsId) {
         mTotalPostsIds.add(lockedPostsId);
     }
 
-    public void AddUnlockedPostsId(Integer unlockedPostsId) {
+    public void AddUnlockedPostsId(String unlockedPostsId) {
         mUserPostsIds.add(unlockedPostsId);
     }
 
