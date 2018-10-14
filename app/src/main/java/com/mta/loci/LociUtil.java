@@ -26,9 +26,9 @@ class LociUtil {
     public static void InitUserFromIntent(Intent intent, LociUser mUser) {
         mUser = new LociUser();
         mUser.SetUserId(intent.getStringExtra("0"));
-        mUser.SetUserPostsIds(intent.getIntegerArrayListExtra("1"));
-        mUser.SetTotalPostsIds(intent.getIntegerArrayListExtra("2"));
-        mUser.SetUnlockedPostsIds(intent.getIntegerArrayListExtra("3"));
+        mUser.SetUserPostsIds(intent.getStringArrayListExtra("1"));
+        mUser.SetTotalPostsIds(intent.getStringArrayListExtra("2"));
+        mUser.SetUnlockedPostsIds(intent.getStringArrayListExtra("3"));
     }
 
     public static String updateLocationAddress(Context context, LatLng latLng) {
