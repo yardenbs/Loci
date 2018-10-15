@@ -12,6 +12,8 @@ public class LociUser implements Parcelable {
     private ArrayList<String> mUserPostsIds;
     private ArrayList<String> mTotalPostsIds;
     private ArrayList<String> mUnlockedPostsIds;
+    private ArrayList<String> mFollowing; // list of Uid users that i folllow
+    private ArrayList<String> mFollowers; // list of Uid users that folllow me
 
     public LociUser() {
         mUserPostsIds = new ArrayList<>();
@@ -105,5 +107,18 @@ public class LociUser implements Parcelable {
         mTotalPostsIds = in.readArrayList(null);
         mUserPostsIds = in.readArrayList( null);
         mUserId = in.readString();
+    }
+
+    public ArrayList<String> getFollowing() {
+        return mFollowing;
+    }
+
+    public void addNewFollowing(String Uid) {
+        mFollowing.add(Uid);
+        // todo add the data to database
+    }
+    public void removeFollowing(String Uid) {
+        mFollowing.remove(Uid);
+        // todo remove the data to database
     }
 }
