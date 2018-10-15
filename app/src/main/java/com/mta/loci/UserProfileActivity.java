@@ -66,8 +66,6 @@ public class UserProfileActivity extends AppCompatActivity {
         });
     }
 
-    // create follow button on click
-
 
     private void InitGridView() {
 
