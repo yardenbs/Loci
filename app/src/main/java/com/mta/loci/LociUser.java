@@ -116,9 +116,11 @@ public class LociUser implements Parcelable {
     public void addNewFollowing(String Uid) {
         mFollowing.add(Uid);
         // todo add the data to database
+        // todo add me to this user followers
     }
     public void removeFollowing(String Uid) {
         mFollowing.remove(Uid);
         // todo remove the data to database
+        // todo remove me from this user followers
     }
 }
