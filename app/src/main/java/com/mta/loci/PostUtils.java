@@ -1,6 +1,9 @@
 package com.mta.loci;
 
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.location.Location;
+import android.media.ExifInterface;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -12,7 +15,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
 import java.util.Date;
+
+import static android.media.ExifInterface.ORIENTATION_ROTATE_180;
+import static android.media.ExifInterface.ORIENTATION_ROTATE_90;
 
 class PostUtils {
     public static final long SECONDS_IN_DAY = 24*60*60;
@@ -64,5 +71,30 @@ class PostUtils {
         });
 
         return mPost;
+    }
+
+    public static Bitmap rotateImage(Bitmap bitmap, String imageFileLocation){
+        ExifInterface exifIF = null;
+        try{
+            exifIF = new ExifInterface(imageFileLocation);
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        int orientation = exifIF.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+        Matrix matrix = new Matrix();
+
+        switch (orientation) {
+            case (ORIENTATION_ROTATE_90) :
+                matrix.setRotate(90);
+                break;
+            case (ORIENTATION_ROTATE_180) :
+                matrix.setRotate(180);
+                break;
+            default:
+        }
+
+        Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+
+        return rotatedBitmap;
     }
 }

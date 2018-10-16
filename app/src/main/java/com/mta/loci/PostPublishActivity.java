@@ -42,7 +42,6 @@ public class PostPublishActivity extends AppCompatActivity {
         mPostLocation = getIntent().getExtras().getParcelable("latLng");
         mMediaType = getIntent().getStringExtra("mediaType");
         InitUI();
-        //mLocationTextView.setText("somewhere");
         mLocationTextView.setText(GeoUtils.getLatLngAddress(mPostLocation, this.getBaseContext()));
         LoadAndDisplayTakenImage();
         initPublishButton();
@@ -83,11 +82,11 @@ public class PostPublishActivity extends AppCompatActivity {
         if (mMediaUri != null) {
             try {
                 mTakenImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), mMediaUri);
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            mTakenImageView.setImageBitmap(mTakenImageBitmap);
+
+            mTakenImageView.setImageBitmap(PostUtils.rotateImage(mTakenImageBitmap, mMediaUri.getPath()));
         }
     }
 

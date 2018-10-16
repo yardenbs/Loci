@@ -16,14 +16,14 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:clickable="true"
-        app:elevation="@dimen/fui_auth_method_button_margin"
+        app:elevation="20dp"
         app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/mapView3"
-        app:layout_constraintStart_toStartOf="@+id/mapView3" />
+        app:layout_constraintEnd_toEndOf="@+id/PublishmapView"
+        app:layout_constraintStart_toStartOf="@+id/PublishmapView" />
 
     <com.google.android.gms.maps.MapView
-        android:id="@+id/mapView3"
+        android:id="@+id/PublishmapView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="8dp"
@@ -52,24 +52,23 @@
         android:editable="false"
         android:ems="10"
         android:textColor="@color/browser_actions_bg_grey"
-        app:layout_constraintEnd_toEndOf="@+id/mapView3"
-        app:layout_constraintStart_toStartOf="@+id/mapView3"
-        app:layout_constraintTop_toTopOf="@+id/mapView3" />
+        app:layout_constraintEnd_toEndOf="@+id/PublishmapView"
+        app:layout_constraintStart_toStartOf="@+id/PublishmapView"
+        app:layout_constraintTop_toTopOf="@+id/PublishmapView" />
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="139dp"
-        android:layout_height="147dp"
-        android:layout_marginBottom="416dp"
-        android:layout_marginLeft="208dp"
-        android:layout_marginStart="208dp"
+        android:layout_width="184dp"
+        android:layout_height="154dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="40dp"
         android:adjustViewBounds="false"
         android:cropToPadding="false"
         android:fadingEdge="horizontal|vertical"
-        android:orientation="vertical"
         android:scaleType="fitCenter"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/mapView3"
+        app:layout_constraintEnd_toEndOf="@+id/PublishmapView"
+        app:layout_constraintTop_toBottomOf="@+id/LocationText"
         app:srcCompat="@color/browser_actions_divider_color" />
 
 </android.support.constraint.ConstraintLayout>
