@@ -3,13 +3,14 @@ package com.mta.loci;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.provider.MediaStore;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DatabaseReference;
@@ -21,30 +22,29 @@ public class PostPublishActivity extends AppCompatActivity {
     private final String TAG = this.getClass().getName();
     private LatLng mPostLocation;
     private LociUser mUser;
-    private Button mPublishButton;
+    private FloatingActionButton mPublishButton;
     private String mMediaType;
     private String mUrl;
     private Uri mMediaUri;
     private ImageView mTakenImageView;
     private Bitmap mTakenImageBitmap = null;
+    private TextView mLocationTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        InitUI();
         Intent intent = getIntent();
         String imageUriString = intent.getStringExtra("mediaUri");
         if (imageUriString == null)
             Log.e("IMAGE URI IS NULL", "NULL");
         mMediaUri = Uri.parse(imageUriString);
-        LoadAndDisplayTakenImage();
         LociUtil.InitUserFromIntent(getIntent(), mUser);
-        mPostLocation = getIntent().getExtras().getParcelable("4");
-
-        //TODO: define this in the intent sent to this activity !!!
+        mPostLocation = getIntent().getExtras().getParcelable("latLng");
         mMediaType = getIntent().getStringExtra("mediaType");
-        setContentView(R.layout.activity_post_publish);
+        InitUI();
+        //mLocationTextView.setText("somewhere");
+        mLocationTextView.setText(GeoUtils.getLatLngAddress(mPostLocation, this.getBaseContext()));
+        LoadAndDisplayTakenImage();
         initPublishButton();
     }
 
@@ -62,8 +62,9 @@ public class PostPublishActivity extends AppCompatActivity {
 
                 //TODO: create this method: uploadMediaToDatabase
                 //mUrl = PostUtils.uploadMediaToDatabase(Uri uri);
-
-                uploadPostToDatabase(mUrl, mMediaType);
+                if( mUrl != null) {
+                    uploadPostToDatabase(mUrl, mMediaType);
+                }
             }
         });
 
@@ -72,6 +73,8 @@ public class PostPublishActivity extends AppCompatActivity {
 
     private void InitUI() {
         setContentView(R.layout.activity_post_publish);
+        mLocationTextView = findViewById(R.id.LocationText);
+
         initMapView(mPostLocation);
         mTakenImageView = findViewById(R.id.imageView);
     }
@@ -80,6 +83,7 @@ public class PostPublishActivity extends AppCompatActivity {
         if (mMediaUri != null) {
             try {
                 mTakenImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), mMediaUri);
+
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -117,14 +117,13 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
                 intent.putExtra(TOTAL_POSTS_CODE, mUser.GetTotalPostsIds());
                 intent.putExtra(UNLOCKED_POSTS_CODE, mUser.GetUnlockedPostsIds());
                 if (mCurrLocation != null)
-                    intent.putExtra(LAT_LNG, new LatLng(mCurrLocation.getLatitude(),mCurrLocation.getLatitude()));
+                    intent.putExtra(LAT_LNG, new LatLng(mCurrLocation.getLatitude(),mCurrLocation.getLongitude()));
                 startActivity(intent);
             }
         });
     }
 
     private void updateLocationAddress(Location location) {
-
         Geocoder geoCoder = new Geocoder(getBaseContext(), Locale.getDefault());
         try {
             List<Address> addresses = geoCoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);

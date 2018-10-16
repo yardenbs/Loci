@@ -88,8 +88,10 @@ public class PostMakerActivity extends AppCompatActivity {
         mDisplayContentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(),PhotoPlayer.class);
+                Intent intent = new Intent(view.getContext(),PostPublishActivity.class);
                 intent.putExtra("mediaUri", mOutputImgUri.toString());
+                intent.putExtra("latLng", mPostLocation);
+                intent.putExtra("mediaType", "photo");
                 startActivity(intent);
             }
         });
