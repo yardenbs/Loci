@@ -97,4 +97,9 @@ class PostUtils {
 
         return rotatedBitmap;
     }
+
+    public static Bitmap resizeMapIcons(Bitmap bitmap, int width, int height){
+        Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, width, height, false);
+        return resizedBitmap;
+    }
 }
