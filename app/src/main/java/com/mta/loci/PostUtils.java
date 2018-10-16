@@ -1,23 +1,34 @@
 package com.mta.loci;
 
 import android.location.Location;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.net.URL;
 import java.util.Date;
 
 class PostUtils {
     public static final long SECONDS_IN_DAY = 24*60*60;
     public static final double MINIMUM_UNLOCKING_DISTANCE = 15;
     private static Post mPost = new Post();
+    private static Uri mUri;
 
     public static boolean isOldPost(Post post){
         return new Date().after(new Date(post.getDatePosted() + PostUtils.SECONDS_IN_DAY));
@@ -64,5 +75,33 @@ class PostUtils {
         });
 
         return mPost;
+    }
+
+    public static Uri uploadMediaToDatabase(Uri uri) {
+        String uId = LociUtil.GetCurrentUserId();
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        final StorageReference photoRef = storageRef.child(uId).child("photos").child(uri.getPath());
+
+         UploadTask uploadTask = photoRef.putFile(uri);
+
+        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
+                }
+
+                return photoRef.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    mUri = task.getResult();
+                }
+            }
+        });
+
+        return mUri;
     }
 }
