@@ -1,9 +1,7 @@
 package com.mta.loci;
 
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -11,9 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 
 public class PhotoPlayer extends AppCompatActivity {
 
@@ -28,8 +24,10 @@ public class PhotoPlayer extends AppCompatActivity {
         InitUI();
         Intent intent = getIntent();
         int i = intent.getIntExtra("1", 0);
-        String imageUriString = intent.getStringExtra("imageUri");
+        String imageUriString = intent.getStringExtra("mediaUri");
         if (imageUriString == null)
+
+
             Log.e("IMAGE URI IS NULL", "NULL");
         mTakenImageUri = Uri.parse(imageUriString);
         LoadAndDisplayTakenImage();
