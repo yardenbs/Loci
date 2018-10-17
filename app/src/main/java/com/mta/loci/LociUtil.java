@@ -55,7 +55,7 @@ class LociUtil {
         return null;
     }
 
-    public static LociUser getUserFromDatabase(final String uid ) {
+    public static LociUser getUserFromDatabase(String uid ) {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference databaseUsers = database.getReference("Users");
@@ -77,9 +77,11 @@ class LociUtil {
 
     public static String GetCurrentUserId() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
         if (user != null) {
             return user.getUid();
         }
+
         return null;
     }
 
