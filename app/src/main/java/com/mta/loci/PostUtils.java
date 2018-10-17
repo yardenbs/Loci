@@ -35,7 +35,6 @@ class PostUtils {
     public static final long SECONDS_IN_DAY = 24*60*60;
     public static final double MINIMUM_UNLOCKING_DISTANCE = 15;
     private static Post mPost = new Post();
-    private static Uri mUri;
 
     public static boolean isOldPost(Post post){
         return new Date().after(new Date(post.getDatePosted() + PostUtils.SECONDS_IN_DAY));
@@ -114,12 +113,13 @@ class PostUtils {
         return resizedBitmap;
     }
 
-    public static Uri uploadMediaToDatabase(Uri uri) {
-        String uId = LociUtil.GetCurrentUserId();
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-        final StorageReference photoRef = storageRef.child(uId).child("photos").child(uri.getPath());
+    public static void uploadMediaAndPost(final Uri localUri, final LatLng postLocation) {
 
-         UploadTask uploadTask = photoRef.putFile(uri);
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        final String uId = LociUtil.GetCurrentUserId();
+        final StorageReference photoRef = storageRef.child(uId).child("photos").child(localUri.getPath());
+
+         UploadTask uploadTask = photoRef.putFile(localUri);
 
         Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
             @Override
@@ -134,11 +134,21 @@ class PostUtils {
             @Override
             public void onComplete(@NonNull Task<Uri> task) {
                 if (task.isSuccessful()) {
-                    mUri = task.getResult();
+                    Uri downloadUrl = task.getResult();
+                    uploadPostToDatabase(downloadUrl.getPath(), "photo", postLocation, uId);
                 }
             }
         });
 
-        return mUri;
+    }
+
+    private  static  void uploadPostToDatabase(String url, String mediaType ,LatLng postLocation, String uId){
+
+        DatabaseReference databasePosts = FirebaseDatabase.getInstance().getReference("Posts");
+
+        String id = databasePosts.push().getKey();
+        Post post = new Post(id, uId, postLocation.latitude, postLocation.longitude, url, mediaType);
+
+        databasePosts.child(id).setValue(post);
     }
 }

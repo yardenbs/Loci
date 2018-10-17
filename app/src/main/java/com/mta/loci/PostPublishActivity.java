@@ -72,12 +72,7 @@ public class PostPublishActivity extends AppCompatActivity implements OnMapReady
         mPublishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                //TODO: create this method: uploadMediaToDatabase
-                //mUrl = PostUtils.uploadMediaToDatabase(Uri uri);
-                if( mUrl != null) {
-                    uploadPostToDatabase(mUrl, mMediaType);
-                }
+                PostUtils.uploadMediaAndPost(mMediaUri,mPostLocation);
             }
         });
 
@@ -105,18 +100,7 @@ public class PostPublishActivity extends AppCompatActivity implements OnMapReady
         }
     }
 
-    private void uploadPostToDatabase(String url, String mediaType ){
-        Log.d(TAG, "uploadPostToDatabase: enter");
 
-        DatabaseReference databasePosts = FirebaseDatabase.getInstance().getReference("Posts");
-
-        String id = databasePosts.push().getKey();
-        Post post = new Post(id, mUser.GetUserId(), mPostLocation.latitude, mPostLocation.longitude, url, mediaType);
-
-        databasePosts.child(id).setValue(post);
-
-        Log.d(TAG, "uploadPostToDatabase: end");
-    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
