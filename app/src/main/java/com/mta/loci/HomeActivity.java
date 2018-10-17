@@ -9,19 +9,17 @@ import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-
-
-import android.location.LocationListener;
-import android.location.LocationManager;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -88,7 +86,8 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         mButtonUserProfile = (Button) findViewById(R.id.buttonUserProfile);
 
         // test //fix
-        mUser = new LociUser();
+        String uid = LociUtil.getCurrentUserId();
+        mUser = LociUtil.getUserFromDatabase(uid);
 
         mButtonUserProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,10 +96,10 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 // Parsing the Loci user field by field in order to load to intent:
                 // fix - need to load user image url and more...
-                intent.putExtra(LOCI_USER_CODE, mUser.GetUserId());
-                intent.putExtra(USER_POSTS_CODE, mUser.GetUserPostsIds());
-                intent.putExtra(TOTAL_POSTS_CODE, mUser.GetTotalPostsIds());
-                intent.putExtra(UNLOCKED_POSTS_CODE, mUser.GetUnlockedPostsIds());
+                intent.putExtra(LOCI_USER_CODE, LociUtil.getCurrentUserId());
+//                intent.putExtra(USER_POSTS_CODE, mUser.GetUserPostsIds());
+//                intent.putExtra(TOTAL_POSTS_CODE, mUser.GetTotalPostsIds());
+//                intent.putExtra(UNLOCKED_POSTS_CODE, mUser.GetUnlockedPostsIds());
                 startActivity(intent);
             }
         });
@@ -213,13 +212,8 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void addMarkers(List<Marker> markers) {
 
-        //user should have all his posts and the posts of the people he follows uploaded when he logged in ! @Yarden @Zuf
-        // so the following needs to be removed:
-        //LociUser thisUser = new LociUser();
-        //List<Post> userFriendsPosts = thisUser.;
-        //Marker currMarker;
-        ////until here
-//
+        //get all posts from database
+
         //if (userFriendsPosts != null) {
         //    for (Post post : userFriendsPosts) {
         //        if (post.RequestKill()) {

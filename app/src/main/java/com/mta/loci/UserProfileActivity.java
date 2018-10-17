@@ -34,7 +34,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
         // get currnt user
         mCurrentUser = LociUtil.getUserFromDatabase(FirebaseAuth.getInstance().getUid());
-        LociUtil.InitUserFromIntent(getIntent(), mProfileUser ); // get feom intent the user of the profile// todo : fix home activity user intent !!!
+        mProfileUser = LociUtil.InitUserFromIntent(getIntent()); // get feom intent the user of the profile// todo : fix home activity user intent !!!
 
         if(mProfileUser.GetUserId() != mCurrentUser.GetUserId()) { // is this is my profile?
             mFollowButton.setVisibility(View.VISIBLE);

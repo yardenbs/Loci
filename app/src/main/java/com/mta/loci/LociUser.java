@@ -9,9 +9,9 @@ public class LociUser implements Parcelable {
 
     private String mName;
     private String mUserId;
-    private ArrayList<String> mUserPostsIds;
-    private ArrayList<String> mTotalPostsIds;
-    private ArrayList<String> mUnlockedPostsIds;
+    private ArrayList<String> mUserPostsIds; //my posts
+    private ArrayList<String> mTotalPostsIds; //all the posts of those I am following + mine
+    private ArrayList<String> mUnlockedPostsIds; //all the viewable (unlocked) posts (mine + the ones I unlocked)
     private ArrayList<String> mFollowing; // list of Uid users that i folllow
     private ArrayList<String> mFollowers; // list of Uid users that folllow me
 
@@ -21,7 +21,11 @@ public class LociUser implements Parcelable {
     public LociUser(String userId, String name) {
         mUserId = userId;
         mName = name;
-        //TODO add more fhilds
+        mUserPostsIds  = new ArrayList<>();
+        mTotalPostsIds = new ArrayList<>();
+        mUnlockedPostsIds = new ArrayList<>();
+        mFollowing = new ArrayList<>();
+        mFollowers = new ArrayList<>();
     }
 
     public String getName() {

@@ -114,7 +114,7 @@ class PostUtils {
     public static void uploadMediaAndPost(final Uri localUri, final LatLng postLocation) {
 
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-        final String uId = LociUtil.GetCurrentUserId();
+        final String uId = LociUtil.getCurrentUserId();
         final StorageReference photoRef = storageRef.child(uId).child("photos").child(localUri.getPath());
 
          UploadTask uploadTask = photoRef.putFile(localUri);

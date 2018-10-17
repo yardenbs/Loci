@@ -25,12 +25,11 @@ class LociUtil {
 
     private static LociUser mLociUser = new LociUser();
 
-    public static void InitUserFromIntent(Intent intent, LociUser mUser) {
-        mUser = new LociUser();
-        mUser.SetUserId(intent.getStringExtra("0"));
-        mUser.SetUserPostsIds(intent.getStringArrayListExtra("1"));
-        mUser.SetTotalPostsIds(intent.getStringArrayListExtra("2"));
-        mUser.SetUnlockedPostsIds(intent.getStringArrayListExtra("3"));
+    public static LociUser InitUserFromIntent(Intent intent) {
+        String uid = intent.getStringExtra("0");
+        LociUser retUser =  getUserFromDatabase(uid);
+
+        return retUser;
     }
 
     public static String updateLocationAddress(Context context, LatLng latLng) {
@@ -75,7 +74,7 @@ class LociUtil {
         return mLociUser;
     }
 
-    public static String GetCurrentUserId() {
+    public static String getCurrentUserId() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         if (user != null) {
