@@ -57,7 +57,6 @@ public class PostMakerActivity extends AppCompatActivity {
         mShootVideoButton = (Button) findViewById(R.id.shootVideoButton);
         mWriteTextButton = (Button) findViewById(R.id.writeTextButton);
         mRecoredVoiceButton = (Button) findViewById(R.id.recordVoiceButton);
-        mDisplayContentButton = (Button) findViewById(R.id.displayContentButton);
 
 
         mTakePictureButton.setOnClickListener(new View.OnClickListener() {
@@ -85,17 +84,21 @@ public class PostMakerActivity extends AppCompatActivity {
             }
         });
 
-        mDisplayContentButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(),PostPublishActivity.class);
-                intent.putExtra("mediaUri", mOutputImgUri.toString());
-                intent.putExtra("latLng", mPostLocation);
-                intent.putExtra("mediaType", "photo");
-                startActivity(intent);
-            }
-        });
+
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_TAKE_PICTURE && resultCode == RESULT_OK) {
+            Intent intent = new Intent(this,PostPublishActivity.class);
+            intent.putExtra("mediaUri", mOutputImgUri.toString());
+            intent.putExtra("latLng", mPostLocation);
+            intent.putExtra("mediaType", "photo");
+            startActivity(intent);
+        }
+    }
+
+
 
     private File CustomCreateImageFile() throws IOException {
         // Create an image file name

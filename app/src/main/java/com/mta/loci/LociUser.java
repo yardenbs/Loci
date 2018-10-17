@@ -31,6 +31,7 @@ public class LociUser implements Parcelable {
     public void setName(String name) {
         mName = name;
     }
+
     public String GetUserId() {
         return mUserId;
     }
@@ -75,6 +76,26 @@ public class LociUser implements Parcelable {
         mUserPostsIds.add(unlockedPostsId);
     }
 
+    public ArrayList<String> getFollowing() {
+        return mFollowing;
+    }
+
+    public void addNewFollowing(String Uid) {
+        mFollowing.add(Uid);
+        //TODO: the following todo's need to be done by the profileActivity and not the LociUser
+        // todo add the data to database
+        // todo add me to this user followers
+    }
+
+    public void removeFollowing(String Uid) {
+        mFollowing.remove(Uid);
+        //TODO: the following todo's need to be done by the profileActivity and not the LociUser
+        // todo remove the data to database
+        // todo remove me from this user followers
+    }
+
+    //parcel garbage: ----------------------------------------------------------------------//
+
     @Override
     public int describeContents() {
         return 0;
@@ -106,18 +127,4 @@ public class LociUser implements Parcelable {
         mUserId = in.readString();
     }
 
-    public ArrayList<String> getFollowing() {
-        return mFollowing;
-    }
-
-    public void addNewFollowing(String Uid) {
-        mFollowing.add(Uid);
-        // todo add the data to database
-        // todo add me to this user followers
-    }
-    public void removeFollowing(String Uid) {
-        mFollowing.remove(Uid);
-        // todo remove the data to database
-        // todo remove me from this user followers
-    }
 }

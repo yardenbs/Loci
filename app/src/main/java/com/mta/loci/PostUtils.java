@@ -137,7 +137,6 @@ class PostUtils {
                 }
             }
         });
-
     }
 
     private  static  void uploadPostToDatabase(String url, String mediaType ,LatLng postLocation, String uId){
