@@ -15,11 +15,8 @@ public class LociUser implements Parcelable {
     private ArrayList<String> mFollowing; // list of Uid users that i folllow
     private ArrayList<String> mFollowers; // list of Uid users that folllow me
 
-    public LociUser() {
-        mUserPostsIds = new ArrayList<>();
-        mTotalPostsIds = new ArrayList<>();
-        mUnlockedPostsIds = new ArrayList<>();
-    }
+    //keep empty c'tor for firebase downloading the user
+    public LociUser() { }
 
     public LociUser(String userId, String name) {
         mUserId = userId;

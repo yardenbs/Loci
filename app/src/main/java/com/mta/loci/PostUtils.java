@@ -13,8 +13,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,7 +23,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.Date;
 
 import static android.media.ExifInterface.ORIENTATION_ROTATE_180;
@@ -64,7 +61,8 @@ class PostUtils {
         return (double) result[0];
     }
 
-    public static Post getPostFromDatabase(final String postId ) {
+    public static Post getPostFromDatabase(final String postId )
+    {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference databasePosts = database.getReference("Posts");

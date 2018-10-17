@@ -20,6 +20,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -123,9 +124,10 @@ public class PostPublishActivity extends AppCompatActivity implements OnMapReady
         gmap = googleMap;
         gmap.setMinZoomPreference(16);
         gmap.moveCamera(CameraUpdateFactory.newLatLng(mPostLocation));
-        String name = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String uid = user.getUid();
+        String name  = LociUtil.getUserFromDatabase(uid).getName();
         gmap.addMarker(new MarkerOptions().position(mPostLocation).title(name));
-
         gmap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
@@ -141,8 +143,6 @@ public class PostPublishActivity extends AppCompatActivity implements OnMapReady
             }
         });
 }
-
-
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -161,13 +161,11 @@ public class PostPublishActivity extends AppCompatActivity implements OnMapReady
         super.onResume();
         mapView.onResume();
     }
-
     @Override
     protected void onStart() {
         super.onStart();
         mapView.onStart();
     }
-
     @Override
     protected void onStop() {
         super.onStop();
