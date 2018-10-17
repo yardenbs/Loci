@@ -1,6 +1,9 @@
 package com.mta.loci;
 
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.location.Location;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -21,8 +24,12 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
+
+import static android.media.ExifInterface.ORIENTATION_ROTATE_180;
+import static android.media.ExifInterface.ORIENTATION_ROTATE_90;
 
 class PostUtils {
     public static final long SECONDS_IN_DAY = 24*60*60;
@@ -75,6 +82,36 @@ class PostUtils {
         });
 
         return mPost;
+    }
+
+    public static Bitmap rotateImage(Bitmap bitmap, String imageFileLocation){
+        ExifInterface exifIF = null;
+        try{
+            exifIF = new ExifInterface(imageFileLocation);
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        int orientation = exifIF.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+        Matrix matrix = new Matrix();
+
+        switch (orientation) {
+            case (ORIENTATION_ROTATE_90) :
+                matrix.setRotate(90);
+                break;
+            case (ORIENTATION_ROTATE_180) :
+                matrix.setRotate(180);
+                break;
+            default:
+        }
+
+        Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+
+        return rotatedBitmap;
+    }
+
+    public static Bitmap resizeMapIcons(Bitmap bitmap, int width, int height){
+        Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, width, height, false);
+        return resizedBitmap;
     }
 
     public static Uri uploadMediaToDatabase(Uri uri) {

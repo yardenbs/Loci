@@ -12,13 +12,20 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.IOException;
 
-public class PostPublishActivity extends AppCompatActivity {
+public class PostPublishActivity extends AppCompatActivity implements OnMapReadyCallback {
     private final String TAG = this.getClass().getName();
     private LatLng mPostLocation;
     private LociUser mUser;
@@ -29,6 +36,10 @@ public class PostPublishActivity extends AppCompatActivity {
     private ImageView mTakenImageView;
     private Bitmap mTakenImageBitmap = null;
     private TextView mLocationTextView;
+    private MapView mapView;
+    private GoogleMap gmap;
+    private static final String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
+    private Bitmap mPostImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,18 +49,20 @@ public class PostPublishActivity extends AppCompatActivity {
         if (imageUriString == null)
             Log.e("IMAGE URI IS NULL", "NULL");
         mMediaUri = Uri.parse(imageUriString);
-        LociUtil.InitUserFromIntent(getIntent(), mUser);
         mPostLocation = getIntent().getExtras().getParcelable("latLng");
         mMediaType = getIntent().getStringExtra("mediaType");
+
         InitUI();
-        //mLocationTextView.setText("somewhere");
-        mLocationTextView.setText(GeoUtils.getLatLngAddress(mPostLocation, this.getBaseContext()));
-        LoadAndDisplayTakenImage();
         initPublishButton();
+
+
     }
 
-    private void initMapView(LatLng mPostLocation) {
-        //TODO: get back to this after reinventing the camera!
+    private void initMapView() {
+        Bundle mapViewBundle = null;
+        mapView = findViewById(R.id.PublishmapView);
+        mapView.onCreate(mapViewBundle);
+        mapView.getMapAsync(this);
     }
 
     private void initPublishButton(){
@@ -74,20 +87,21 @@ public class PostPublishActivity extends AppCompatActivity {
     private void InitUI() {
         setContentView(R.layout.activity_post_publish);
         mLocationTextView = findViewById(R.id.LocationText);
-
-        initMapView(mPostLocation);
         mTakenImageView = findViewById(R.id.imageView);
+        initMapView();
+        mLocationTextView.setText(GeoUtils.getLatLngAddress(mPostLocation, this.getBaseContext()));
+        LoadAndDisplayTakenImage();
     }
 
     private void LoadAndDisplayTakenImage() {
         if (mMediaUri != null) {
             try {
                 mTakenImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), mMediaUri);
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            mTakenImageView.setImageBitmap(mTakenImageBitmap);
+            mPostImage = PostUtils.rotateImage(mTakenImageBitmap, mMediaUri.getPath());
+            mTakenImageView.setImageBitmap(mPostImage);
         }
     }
 
@@ -102,5 +116,76 @@ public class PostPublishActivity extends AppCompatActivity {
         databasePosts.child(id).setValue(post);
 
         Log.d(TAG, "uploadPostToDatabase: end");
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        gmap = googleMap;
+        gmap.setMinZoomPreference(16);
+        gmap.moveCamera(CameraUpdateFactory.newLatLng(mPostLocation));
+        String name = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+        gmap.addMarker(new MarkerOptions().position(mPostLocation).title(name));
+
+        gmap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                marker.showInfoWindow();
+                return true;
+            }
+        });
+
+        gmap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                marker.hideInfoWindow();
+            }
+        });
+}
+
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        Bundle mapViewBundle = outState.getBundle(MAP_VIEW_BUNDLE_KEY);
+        if (mapViewBundle == null) {
+            mapViewBundle = new Bundle();
+            outState.putBundle(MAP_VIEW_BUNDLE_KEY, mapViewBundle);
+        }
+
+        mapView.onSaveInstanceState(mapViewBundle);
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mapView.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mapView.onStop();
+    }
+    @Override
+    protected void onPause() {
+        mapView.onPause();
+        super.onPause();
+    }
+    @Override
+    protected void onDestroy() {
+        mapView.onDestroy();
+        super.onDestroy();
+    }
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView.onLowMemory();
     }
 }
