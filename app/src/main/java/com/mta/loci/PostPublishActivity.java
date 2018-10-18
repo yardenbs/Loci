@@ -81,6 +81,7 @@ public class PostPublishActivity extends AppCompatActivity implements OnMapReady
             @Override
             public void onClick(View v) {
                 uploadMediaAndPost(mMediaUri,mPostLocation);
+                LociUtil.goHome(PostPublishActivity.this);
             }
         });
 

@@ -84,5 +84,10 @@ class LociUtil {
         return null;
     }
 
+    public static void goHome(Context context) {
+        Intent intent = new Intent(context, HomeActivity.class);
+        context.startActivity(intent);
+    }
+
 
 }
