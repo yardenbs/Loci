@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -19,10 +20,16 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 
@@ -73,7 +80,7 @@ public class PostPublishActivity extends AppCompatActivity implements OnMapReady
         mPublishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PostUtils.uploadMediaAndPost(mMediaUri,mPostLocation);
+                uploadMediaAndPost(mMediaUri,mPostLocation);
             }
         });
 
@@ -101,6 +108,43 @@ public class PostPublishActivity extends AppCompatActivity implements OnMapReady
         }
     }
 
+    private void uploadMediaAndPost(final Uri localUri, final LatLng postLocation) {
+
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        final String uId = LociUtil.getCurrentUserId();
+        final StorageReference photoRef = storageRef.child(uId).child("photos").child(localUri.getPath());
+
+        UploadTask uploadTask = photoRef.putFile(localUri);
+
+        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
+                }
+
+                return photoRef.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    Uri downloadUrl = task.getResult();
+                    uploadPostToDatabase(downloadUrl.getPath(), "photo", postLocation, uId);
+                }
+            }
+        });
+    }
+
+    private void uploadPostToDatabase(String url, String mediaType ,LatLng postLocation, String uId){
+
+        DatabaseReference databasePosts = FirebaseDatabase.getInstance().getReference("Posts");
+
+        String id = databasePosts.push().getKey();
+        Post post = new Post(id, uId, postLocation.latitude, postLocation.longitude, url, mediaType);
+
+        databasePosts.child(uId).child(id).setValue(post);
+    }
 
 
     @Override

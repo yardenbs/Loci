@@ -4,23 +4,16 @@ import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.location.Location;
 import android.media.ExifInterface;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 import java.util.Date;
@@ -111,41 +104,5 @@ class PostUtils {
         return resizedBitmap;
     }
 
-    public static void uploadMediaAndPost(final Uri localUri, final LatLng postLocation) {
 
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-        final String uId = LociUtil.getCurrentUserId();
-        final StorageReference photoRef = storageRef.child(uId).child("photos").child(localUri.getPath());
-
-         UploadTask uploadTask = photoRef.putFile(localUri);
-
-        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-            @Override
-            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                if (!task.isSuccessful()) {
-                    throw task.getException();
-                }
-
-                return photoRef.getDownloadUrl();
-            }
-        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-            @Override
-            public void onComplete(@NonNull Task<Uri> task) {
-                if (task.isSuccessful()) {
-                    Uri downloadUrl = task.getResult();
-                    uploadPostToDatabase(downloadUrl.getPath(), "photo", postLocation, uId);
-                }
-            }
-        });
-    }
-
-    private  static  void uploadPostToDatabase(String url, String mediaType ,LatLng postLocation, String uId){
-
-        DatabaseReference databasePosts = FirebaseDatabase.getInstance().getReference("Posts");
-
-        String id = databasePosts.push().getKey();
-        Post post = new Post(id, uId, postLocation.latitude, postLocation.longitude, url, mediaType);
-
-        databasePosts.child(uId).child(id).setValue(post);
-    }
 }
