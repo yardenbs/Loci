@@ -98,6 +98,22 @@ public class LociUser implements Parcelable {
         // todo remove me from this user followers
     }
 
+    public ArrayList<String> getmFollowers() {
+        return mFollowers;
+    }
+
+    public ArrayList<String> getTotalPostsIds() {
+        return mTotalPostsIds;
+    }
+
+    public ArrayList<String> getUnlockedPostsIds() {
+        return mUnlockedPostsIds;
+    }
+
+    public ArrayList<String> getUserPostsIds() {
+        return mUserPostsIds;
+    }
+
     //parcel garbage: ----------------------------------------------------------------------//
 
     @Override

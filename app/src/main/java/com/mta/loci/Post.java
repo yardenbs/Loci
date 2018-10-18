@@ -72,4 +72,7 @@ public class Post {
     public String getMediaType() {
         return mMediaType;
     }
+
+//    public MarkerOptions generateMarkerOptions() {
+//    }
 }

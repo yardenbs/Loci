@@ -31,8 +31,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -210,22 +213,42 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
     }
 
-    private void addMarkers(List<Marker> markers) {
+    private void addMarkers() {
+        //assume from onCreate that user has all data from firebase
 
-        //get all posts from database
-
-        //if (userFriendsPosts != null) {
-        //    for (Post post : userFriendsPosts) {
-        //        if (post.RequestKill()) {
-        //            //TODO add method to remove this post from my list and from the database
-        //            continue;
-        //        }
+//        if (mUser.getTotalPostsIds() != null) {
+//            ArrayList<Post> posts = fetchPostsFromFirebase(fetchPostsFromFirebase());
+//            for (Post post : posts) {
 //
-        //        MarkerOptions mo = post.GenerateMarkerOptions();
-        //        currMarker = gmap.addMarker(mo);
-        //        currMarker.setTag(post); //this is what needs to be called when user clicks on the InfoWindow!!!
-        //    }
-        //}
+//                if (post.RequestKill()) {
+//                    continue;
+//                }
+//
+//                MarkerOptions mo = post.generateMarkerOptions();
+//                Marker currMarker = gmap.addMarker(mo);
+//                currMarker.setTag(post); //this is what needs to be called when user clicks on the InfoWindow!!!
+//            }
+//        }
+    }
+
+    private ArrayList<Post> fetchPostsFromFirebase(ArrayList<String> totalPostsIds, String uid) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference databaseUsers = database.getReference("Posts");
+//TODO: last position @Amitai 18/10/2018
+//        databaseUsers.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                mLociUser = dataSnapshot.getValue(LociUser.class);
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//                Log.e(LociUtil.class.getSimpleName(), "loadPost:onCancelled", databaseError.toException());
+//            }
+//        });
+//
+//        return mLociUser;
+        return null;
     }
 
     @Override
@@ -248,7 +271,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
             gmap.setMinZoomPreference(MIN_ZOOM);
 
             //add all the markers/posts here!
-            addMarkers(null);
+            addMarkers();
             //
 
             // Set a listener for info window events.
@@ -262,6 +285,11 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         Log.d(TAG, "--> HomeActivity --> onCreate");
         InitUI();
+
+        //TODO: refresh data service to run on separate thread!
+        //fetchFriendsLists();
+        //fetchPost(); //including my own
+
         while (!mLocationPermissionsGranted)
             getPermissions();
 

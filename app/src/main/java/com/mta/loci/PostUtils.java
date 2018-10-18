@@ -53,13 +53,12 @@ class PostUtils {
         return (double) result[0];
     }
 
-    public static Post getPostFromDatabase(final String postId )
-    {
+    public static Post getPostFromDatabase( String postId , String uid) {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference databasePosts = database.getReference("Posts");
 
-        databasePosts.child(postId).addListenerForSingleValueEvent(new ValueEventListener() {
+        databasePosts.child(uid).child(postId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mPost = dataSnapshot.getValue(Post.class);
