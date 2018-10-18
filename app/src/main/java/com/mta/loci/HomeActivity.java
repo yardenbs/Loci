@@ -111,7 +111,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 // Parsing the Loci user field by field in order to load to intent:
                 // fix - need to load user image url and more...
-                intent.putExtra(LOCI_USER_CODE, mUser.GetUserId());
+                intent.putExtra(LOCI_USER_CODE, LociUtil.getCurrentUserId());
                 intent.putExtra(USER_POSTS_CODE, mUser.GetUserPostsIds());
                 intent.putExtra(TOTAL_POSTS_CODE, mUser.GetTotalPostsIds());
                 intent.putExtra(UNLOCKED_POSTS_CODE, mUser.GetUnlockedPostsIds());

@@ -146,6 +146,6 @@ class PostUtils {
         String id = databasePosts.push().getKey();
         Post post = new Post(id, uId, postLocation.latitude, postLocation.longitude, url, mediaType);
 
-        databasePosts.child(id).setValue(post);
+        databasePosts.child(uId).child(id).setValue(post);
     }
 }
