@@ -57,6 +57,23 @@ public class LociUser implements Parcelable {
                 // ...
             }
         });
+
+        databasePosts.child(mUserId).child("unlockedPosts").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postIdSnapshot: dataSnapshot.getChildren()) {
+                    mUnlockedPostsIds.add(postIdSnapshot.toString());
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.e("Firebase", "loadPost:onCancelled", databaseError.toException());
+                // ...
+            }
+        });
+
         databaseUsers.child(mUserId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -77,7 +94,6 @@ public class LociUser implements Parcelable {
                 // ...
             }
         });
-//TODO: @amitai laset point here 19/10/2018
 
     }
 
