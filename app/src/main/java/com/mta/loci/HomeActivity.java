@@ -288,7 +288,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         //TODO: refresh data service to run on separate thread!
         //fetchFriendsLists();
-        //fetchPost(); //including my own
+        //fetchPosts(); //including my own
 
         while (!mLocationPermissionsGranted)
             getPermissions();

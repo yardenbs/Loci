@@ -2,6 +2,13 @@ package com.mta.loci;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -18,6 +25,7 @@ public class LociUser implements Parcelable {
     //keep empty c'tor for firebase downloading the user
     public LociUser() { }
 
+    //new user c'tor
     public LociUser(String userId, String name) {
         mUserId = userId;
         mName = name;
@@ -26,6 +34,51 @@ public class LociUser implements Parcelable {
         mUnlockedPostsIds = new ArrayList<>();
         mFollowing = new ArrayList<>();
         mFollowers = new ArrayList<>();
+    }
+
+    public void updateUserFromDB(){
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference databasePosts = database.getReference("Posts");
+        DatabaseReference databaseUsers = database.getReference("Users");
+
+        databasePosts.child(mUserId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postIdSnapshot: dataSnapshot.getChildren()) {
+                    mUserPostsIds.add(postIdSnapshot.toString());
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.e("Firebase", "loadPost:onCancelled", databaseError.toException());
+                // ...
+            }
+        });
+        databaseUsers.child(mUserId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot userImFollowing: dataSnapshot.child("following").getChildren()) {
+                    mFollowing.add(userImFollowing.toString());
+                }
+
+                for (DataSnapshot userFollowsMe: dataSnapshot.child("followers").getChildren()) {
+                    mFollowers.add(userFollowsMe.toString());
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.e("Firebase", "loadFollowers:onCancelled", databaseError.toException());
+                // ...
+            }
+        });
+//TODO: @amitai laset point here 19/10/2018
+
     }
 
     public String getName() {
@@ -112,6 +165,10 @@ public class LociUser implements Parcelable {
 
     public ArrayList<String> getUserPostsIds() {
         return mUserPostsIds;
+    }
+
+    public String getUserId(){
+        return mUserId;
     }
 
     //parcel garbage: ----------------------------------------------------------------------//

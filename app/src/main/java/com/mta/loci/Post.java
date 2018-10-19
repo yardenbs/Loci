@@ -73,6 +73,4 @@ public class Post {
         return mMediaType;
     }
 
-//    public MarkerOptions generateMarkerOptions() {
-//    }
 }
