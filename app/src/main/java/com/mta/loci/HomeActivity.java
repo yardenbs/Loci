@@ -68,8 +68,8 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
     private String mProvider;
 
     // User needs to be initialized in OnCreate: //fix
-    private LociUser mUser = new LociUser(LociUtil.getCurrentUserId() ,LociUtil.getUserFromDatabase(LociUtil.getCurrentUserId()).getName());
-
+    private LociUser mUser;
+    
     private Button mButtonHome;
     private Button mButtonSearch;
     private Button mButtonPost;
