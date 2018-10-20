@@ -24,14 +24,14 @@ import java.util.Locale;
 class LociUtil {
 
     private static LociUser mLociUser = new LociUser();
-
+/*
     public static LociUser InitUserFromIntent(Intent intent) {
         String uid = intent.getStringExtra("0");
         LociUser retUser =  getUserFromDatabase(uid);
 
         return retUser;
     }
-
+*/
     public static String updateLocationAddress(Context context, LatLng latLng) {
 
         Geocoder geoCoder = new Geocoder(context, Locale.getDefault());
@@ -54,7 +54,7 @@ class LociUtil {
         return null;
     }
 
-    public static LociUser getUserFromDatabase(String uid ) {
+    public static void getUserFromDatabase(final OnUserFromDBCallback onUserFromDBCallback, String uid ) {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference databaseUsers = database.getReference("Users");
@@ -63,6 +63,7 @@ class LociUtil {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mLociUser = dataSnapshot.getValue(LociUser.class);
+                onUserFromDBCallback.update(mLociUser);
             }
 
             @Override
@@ -71,7 +72,7 @@ class LociUtil {
             }
         });
 
-        return mLociUser;
+
     }
 
     public static String getCurrentUserId() {

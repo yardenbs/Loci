@@ -16,24 +16,28 @@ public class LociUser implements Parcelable {
 
     private String mName;
     private String mUserId;
+    private String mEmail;
+    private String mToken;
+    private ArrayList<String> mFollowing; // list of Uid users that i folllow
+    private ArrayList<String> mFollowers; // list of Uid users that folllow me
     private ArrayList<String> mUserPostsIds; //my posts
     private ArrayList<String> mTotalPostsIds; //all the posts of those I am following + mine
     private ArrayList<String> mUnlockedPostsIds; //all the viewable (unlocked) posts (mine + the ones I unlocked)
-    private ArrayList<String> mFollowing; // list of Uid users that i folllow
-    private ArrayList<String> mFollowers; // list of Uid users that folllow me
 
     //keep empty c'tor for firebase downloading the user
     public LociUser() { }
 
     //new user c'tor
-    public LociUser(String userId, String name) {
-        mUserId = userId;
-        mName = name;
-        mUserPostsIds  = new ArrayList<>();
-        mTotalPostsIds = new ArrayList<>();
-        mUnlockedPostsIds = new ArrayList<>();
+    public LociUser(String uid, String email, String displayName, String token) {
+        mUserId = uid;
+        mEmail = email;
+        mName = displayName;
+        mToken = token;
         mFollowing = new ArrayList<>();
         mFollowers = new ArrayList<>();
+        mUserPostsIds = new ArrayList<>();
+        mTotalPostsIds = new ArrayList<>();
+        mUnlockedPostsIds = new ArrayList<>();
     }
 
     public void updateUserFromDB(){
@@ -112,6 +116,16 @@ public class LociUser implements Parcelable {
     public void SetUserId(String userId) {
         mUserId = userId;
     }
+
+    public String getmToken() {return mToken; }
+
+    public void setmToken(String mToken) {this.mToken = mToken; }
+
+    public String getmEmail() { return mEmail; }
+
+    public void setmEmail(String mEmail) {  this.mEmail = mEmail; }
+
+
 
     public ArrayList<String> GetUserPostsIds() {
         return mUserPostsIds;
@@ -219,5 +233,4 @@ public class LociUser implements Parcelable {
         mUserPostsIds = in.readArrayList( null);
         mUserId = in.readString();
     }
-
 }

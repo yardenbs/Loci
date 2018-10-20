@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,7 +25,6 @@ import static android.media.ExifInterface.ORIENTATION_ROTATE_90;
 class PostUtils {
     public static final long SECONDS_IN_DAY = 24*60*60;
     public static final double MINIMUM_UNLOCKING_DISTANCE = 15;
-    private static Post mPost = new Post();
 
     public static boolean isOldPost(Post post){
         return new Date().after(new Date(post.getDatePosted() + PostUtils.SECONDS_IN_DAY));
@@ -32,9 +32,9 @@ class PostUtils {
 
     //generate markerOptions object from the post provided
     public static MarkerOptions GenerateMarkerOptions(Post post) {
-        LociUser user = LociUtil.getUserFromDatabase(post.getCreatorId());
         MarkerOptions mo = new MarkerOptions().position(post.getLatlng())
-                .title(user.getName()); //TODO    user.icon(); need to get the user's icon here
+                .title(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+        //TODO    user.icon(); need to get the user's icon here
 
         return mo;
     }
@@ -53,7 +53,7 @@ class PostUtils {
         return (double) result[0];
     }
 
-    public static Post getPostFromDatabase( String postId , String uid) {
+    public static void getPostFromDatabase(final OnPostFromDBCallback onPostFromDBCallback,  String postId , String uid) {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference databasePosts = database.getReference("Posts");
@@ -61,7 +61,8 @@ class PostUtils {
         databasePosts.child(uid).child(postId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                mPost = dataSnapshot.getValue(Post.class);
+                Post post= dataSnapshot.getValue(Post.class);
+                onPostFromDBCallback.UpdateFromDB(post);
             }
 
             @Override
@@ -70,7 +71,6 @@ class PostUtils {
             }
         });
 
-        return mPost;
     }
 
     public static Bitmap rotateImage(Bitmap bitmap, String imageFileLocation){

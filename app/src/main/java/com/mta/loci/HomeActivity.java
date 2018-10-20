@@ -90,7 +90,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // test //fix
         String uid = LociUtil.getCurrentUserId();
-        mUser = new LociUser(uid,LociUtil.getUserFromDatabase(uid).getName());
+      //  mUser = new LociUser(uid,LociUtil.getUserFromDatabase(uid).getName());
 
         mButtonUserProfile.setOnClickListener(new View.OnClickListener() {
             @Override

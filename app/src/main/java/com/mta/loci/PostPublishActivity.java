@@ -33,13 +33,12 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 
-public class PostPublishActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class PostPublishActivity extends AppCompatActivity implements OnMapReadyCallback, OnUserFromDBCallback {
     private final String TAG = this.getClass().getName();
     private LatLng mPostLocation;
     private LociUser mUser;
     private FloatingActionButton mPublishButton;
     private String mMediaType;
-    private String mUrl;
     private Uri mMediaUri;
     private ImageView mTakenImageView;
     private Bitmap mTakenImageBitmap = null;
@@ -59,7 +58,7 @@ public class PostPublishActivity extends AppCompatActivity implements OnMapReady
         mMediaUri = Uri.parse(imageUriString);
         mPostLocation = getIntent().getExtras().getParcelable("latLng");
         mMediaType = getIntent().getStringExtra("mediaType");
-
+        LociUtil.getUserFromDatabase(this, LociUtil.getCurrentUserId());
         InitUI();
         initPublishButton();
 
@@ -112,8 +111,7 @@ public class PostPublishActivity extends AppCompatActivity implements OnMapReady
     private void uploadMediaAndPost(final Uri localUri, final LatLng postLocation) {
 
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-        final String uId = LociUtil.getCurrentUserId();
-        final StorageReference photoRef = storageRef.child(uId).child("photos").child(localUri.getPath());
+        final StorageReference photoRef = storageRef.child(mUser.GetUserId()).child("photos").child(localUri.getPath());
 
         UploadTask uploadTask = photoRef.putFile(localUri);
 
@@ -131,7 +129,7 @@ public class PostPublishActivity extends AppCompatActivity implements OnMapReady
             public void onComplete(@NonNull Task<Uri> task) {
                 if (task.isSuccessful()) {
                     Uri downloadUrl = task.getResult();
-                    uploadPostToDatabase(downloadUrl.getPath(), "photo", postLocation, uId);
+                    uploadPostToDatabase(downloadUrl.getPath(), "photo", postLocation, mUser.GetUserId());
                 }
             }
         });
@@ -154,9 +152,7 @@ public class PostPublishActivity extends AppCompatActivity implements OnMapReady
         gmap.setMinZoomPreference(16);
         gmap.moveCamera(CameraUpdateFactory.newLatLng(mPostLocation));
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String uid = user.getUid();
-        String name  = LociUtil.getUserFromDatabase(uid).getName();
-        gmap.addMarker(new MarkerOptions().position(mPostLocation).title(name));
+        gmap.addMarker(new MarkerOptions().position(mPostLocation).title(user.getDisplayName()));
         gmap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
@@ -214,5 +210,10 @@ public class PostPublishActivity extends AppCompatActivity implements OnMapReady
     public void onLowMemory() {
         super.onLowMemory();
         mapView.onLowMemory();
+    }
+
+    @Override
+    public void update(LociUser user) {
+        mUser = user;
     }
 }
