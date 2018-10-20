@@ -39,7 +39,8 @@ public class PostMakerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         InitUI();
-        mPostLocation = getIntent().getExtras().getParcelable("4");
+        mPostLocation = getIntent().getExtras().getParcelable("latLng");
+
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
 

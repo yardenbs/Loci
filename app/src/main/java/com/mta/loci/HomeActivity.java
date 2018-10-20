@@ -47,11 +47,6 @@ import java.util.Locale;
 public class HomeActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener, GoogleMap.OnInfoWindowLongClickListener {
 
     private final String TAG = this.getClass().getName();
-    private static final String LOCI_USER_CODE = "0";
-    private static final String USER_POSTS_CODE = "1";
-    private static final String TOTAL_POSTS_CODE = "2";
-    private static final String UNLOCKED_POSTS_CODE = "3";
-    private static final String LAT_LNG = "4";
 
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
@@ -81,6 +76,10 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Button mButtonFeed;
     private Button mButtonUserProfile;
 
+
+    private ArrayList<String> mTotalPostsIds = new ArrayList<>(); //all the posts of those I am following
+    private ArrayList<String> mUnlockedPostsIds = new ArrayList<>(); //all the viewable (unlocked) posts (mine + the ones I unlocked)
+
     private void InitUI() {
         setContentView(R.layout.activity_home);
         InitButtons();
@@ -97,13 +96,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), UserProfileActivity.class);
-
-                // Parsing the Loci user field by field in order to load to intent:
-                // fix - need to load user image url and more...
-                intent.putExtra(LOCI_USER_CODE, LociUtil.getCurrentUserId());
-//                intent.putExtra(USER_POSTS_CODE, mUser.GetUserPostsIds());
-//                intent.putExtra(TOTAL_POSTS_CODE, mUser.GetTotalPostsIds());
-//                intent.putExtra(UNLOCKED_POSTS_CODE, mUser.GetUnlockedPostsIds());
+                intent.putExtra("uid", LociUtil.getCurrentUserId());
                 startActivity(intent);
             }
         });
@@ -112,15 +105,9 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), PostMakerActivity.class);
-
-                // Parsing the Loci user field by field in order to load to intent:
-                // fix - need to load user image url and more...
-                intent.putExtra(LOCI_USER_CODE, LociUtil.getCurrentUserId());
-                intent.putExtra(USER_POSTS_CODE, mUser.GetUserPostsIds());
-                intent.putExtra(TOTAL_POSTS_CODE, mUser.GetTotalPostsIds());
-                intent.putExtra(UNLOCKED_POSTS_CODE, mUser.GetUnlockedPostsIds());
+                intent.putExtra("uid", LociUtil.getCurrentUserId());
                 if (mCurrLocation != null)
-                    intent.putExtra(LAT_LNG, new LatLng(mCurrLocation.getLatitude(),mCurrLocation.getLongitude()));
+                    intent.putExtra("latLng", new LatLng(mCurrLocation.getLatitude(),mCurrLocation.getLongitude()));
                 startActivity(intent);
             }
         });
@@ -221,7 +208,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         while ( mUser==null){
             SystemClock.sleep(100);
         }
-        String postId_0 = mUser.getUserPostsIds().get(0);
+        //String postId_0 = mUser.getUserPostsIds().get(0);
         //
 //        if (mUser.getTotalPostsIds() != null) {
 //            ArrayList<Post> posts = fetchPostsFromFirebase(fetchPostsFromFirebase());
@@ -350,28 +337,11 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         String uid  = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        postsRef.child(uid).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot postIdSnapshot: dataSnapshot.getChildren()) {
-                    mUser.getUserPostsIds().add(postIdSnapshot.getKey());
-                }
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                Log.e("Firebase", "loadPost:onCancelled", databaseError.toException());
-                // ...
-            }
-        });
-
         UsersRef.child(uid).child("UnlockedPosts").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot postIdSnapshot: dataSnapshot.getChildren()) {
-                    mUser.getUnlockedPostsIds().add(postIdSnapshot.getValue().toString());
+                    mUser.getUnlockedPostIds().add(postIdSnapshot.getValue().toString());
                 }
 
             }

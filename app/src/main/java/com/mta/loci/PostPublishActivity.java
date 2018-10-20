@@ -167,7 +167,7 @@ public class PostPublishActivity extends AppCompatActivity implements OnMapReady
                 marker.hideInfoWindow();
             }
         });
-}
+    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

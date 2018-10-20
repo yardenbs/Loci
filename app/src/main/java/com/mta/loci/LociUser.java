@@ -1,21 +1,16 @@
 package com.mta.loci;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import java.util.ArrayList;
 
-public class LociUser implements Parcelable {
+public class LociUser {
 
     private String mName;
     private String mUserId;
     private String mEmail;
     private String mToken;
-    private ArrayList<String> mFollowing = new ArrayList<>(); // list of Uid users that i folllow
-    private ArrayList<String> mFollowers = new ArrayList<>(); // list of Uid users that folllow me
-    private ArrayList<String> mUserPostsIds = new ArrayList<>(); //my posts
-    private ArrayList<String> mTotalPostsIds = new ArrayList<>(); //all the posts of those I am following + mine
-    private ArrayList<String> mUnlockedPostsIds = new ArrayList<>(); //all the viewable (unlocked) posts (mine + the ones I unlocked)
+    private ArrayList<String> mFollowing = new ArrayList<>(); // list of Uid users that i follow
+    private ArrayList<String> mFollowers = new ArrayList<>(); // list of Uid users that follow me
+    private ArrayList<String> mUnlockedPostIds = new ArrayList<>(); // list of Uids of posts that are viewable
 
     //keep empty c'tor for firebase downloading the user
     public LociUser() { }
@@ -28,11 +23,8 @@ public class LociUser implements Parcelable {
         mToken = token;
         mFollowing = new ArrayList<>();
         mFollowers = new ArrayList<>();
-        mUserPostsIds = new ArrayList<>();
-        mTotalPostsIds = new ArrayList<>();
-        mUnlockedPostsIds = new ArrayList<>();
+        mUnlockedPostIds = new ArrayList<>();
     }
-
 
     public String getName() {
         return mName;
@@ -58,42 +50,8 @@ public class LociUser implements Parcelable {
 
     public void setmEmail(String mEmail) {  this.mEmail = mEmail; }
 
-
-
-    public ArrayList<String> GetUserPostsIds() {
-        return mUserPostsIds;
-    }
-
-    public void SetUserPostsIds(ArrayList<String> userPostsIds) {
-        mUserPostsIds = userPostsIds;
-    }
-
-    public ArrayList<String> GetTotalPostsIds() {
-        return mTotalPostsIds;
-    }
-
-    public void SetTotalPostsIds(ArrayList<String> totalPostsIds) {
-        mTotalPostsIds = totalPostsIds;
-    }
-
-    public ArrayList<String> GetUnlockedPostsIds() {
-        return mUnlockedPostsIds;
-    }
-
-    public void SetUnlockedPostsIds(ArrayList<String> unlockedPostsIds) {
-        mUnlockedPostsIds = unlockedPostsIds;
-    }
-
-    public void AddUserPostId(String userPostId) {
-        mUserPostsIds.add(userPostId);
-    }
-
-    public void AddTotalPostsId(String lockedPostsId) {
-        mTotalPostsIds.add(lockedPostsId);
-    }
-
-    public void AddUnlockedPostsId(String unlockedPostsId) {
-        mUserPostsIds.add(unlockedPostsId);
+    public ArrayList<String> GetmUnlockedPostIds() {
+        return mUnlockedPostIds;
     }
 
     public ArrayList<String> getFollowing() {
@@ -118,16 +76,8 @@ public class LociUser implements Parcelable {
         return mFollowers;
     }
 
-    public ArrayList<String> getTotalPostsIds() {
-        return mTotalPostsIds;
-    }
-
-    public ArrayList<String> getUnlockedPostsIds() {
-        return mUnlockedPostsIds;
-    }
-
-    public ArrayList<String> getUserPostsIds() {
-        return mUserPostsIds;
+    public ArrayList<String> getUnlockedPostIds() {
+        return mUnlockedPostIds;
     }
 
     public String getUserId(){
@@ -136,7 +86,7 @@ public class LociUser implements Parcelable {
 
 
     //parcel garbage: ----------------------------------------------------------------------//
-
+/*
     @Override
     public int describeContents() {
         return 0;
@@ -167,6 +117,6 @@ public class LociUser implements Parcelable {
         mUserPostsIds = in.readArrayList( null);
         mUserId = in.readString();
     }
-
+*/
 
 }
