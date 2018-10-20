@@ -68,7 +68,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
     private String mProvider;
 
     // User needs to be initialized in OnCreate: //fix
-    private LociUser mUser;
+    private LociUser mUser = new LociUser(LociUtil.getCurrentUserId() ,LociUtil.getUserFromDatabase(LociUtil.getCurrentUserId()).getName());
 
     private Button mButtonHome;
     private Button mButtonSearch;
@@ -88,9 +88,8 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         mButtonFeed = (Button) findViewById(R.id.buttonFeed);
         mButtonUserProfile = (Button) findViewById(R.id.buttonUserProfile);
 
-        // test //fix
         String uid = LociUtil.getCurrentUserId();
-        mUser = new LociUser(uid,LociUtil.getUserFromDatabase(uid).getName());
+        //mUser = new LociUser(LociUtil.getCurrentUserId() ,LociUtil.getUserFromDatabase(uid).getName());
 
         mButtonUserProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -234,7 +233,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
     private ArrayList<Post> fetchPostsFromFirebase(ArrayList<String> totalPostsIds, String uid) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference databaseUsers = database.getReference("Posts");
-//TODO: last position @Amitai 18/10/2018
+
 //        databaseUsers.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
 //            @Override
 //            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -285,7 +284,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         Log.d(TAG, "--> HomeActivity --> onCreate");
         InitUI();
-
+        mUser.updateUserFromDB();
         //TODO: refresh data service to run on separate thread!
         //fetchFriendsLists();
         //fetchPosts(); //including my own

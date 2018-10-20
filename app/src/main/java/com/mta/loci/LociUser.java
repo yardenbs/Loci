@@ -39,14 +39,14 @@ public class LociUser implements Parcelable {
     public void updateUserFromDB(){
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference databasePosts = database.getReference("Posts");
-        DatabaseReference databaseUsers = database.getReference("Users");
+        DatabaseReference postsRef = database.getReference("Posts");
+        DatabaseReference UsersRef = database.getReference("Users");
 
-        databasePosts.child(mUserId).addValueEventListener(new ValueEventListener() {
+        postsRef.child(mUserId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot postIdSnapshot: dataSnapshot.getChildren()) {
-                    mUserPostsIds.add(postIdSnapshot.toString());
+                    mUserPostsIds.add(postIdSnapshot.getKey());
                 }
             }
 
@@ -58,11 +58,11 @@ public class LociUser implements Parcelable {
             }
         });
 
-        databasePosts.child(mUserId).child("unlockedPosts").addValueEventListener(new ValueEventListener() {
+        UsersRef.child(mUserId).child("UnlockedPosts").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot postIdSnapshot: dataSnapshot.getChildren()) {
-                    mUnlockedPostsIds.add(postIdSnapshot.toString());
+                    mUnlockedPostsIds.add(postIdSnapshot.getValue().toString());
                 }
             }
 
@@ -74,7 +74,8 @@ public class LociUser implements Parcelable {
             }
         });
 
-        databaseUsers.child(mUserId).addValueEventListener(new ValueEventListener() {
+
+        UsersRef.child(mUserId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 

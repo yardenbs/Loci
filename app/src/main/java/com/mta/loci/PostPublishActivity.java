@@ -140,11 +140,13 @@ public class PostPublishActivity extends AppCompatActivity implements OnMapReady
     private void uploadPostToDatabase(String url, String mediaType ,LatLng postLocation, String uId){
 
         DatabaseReference databasePosts = FirebaseDatabase.getInstance().getReference("Posts");
+        DatabaseReference databaseUnlockedPosts = FirebaseDatabase.getInstance().getReference("Users").child(uId).child("UnlockedPosts");
 
         String id = databasePosts.push().getKey();
         Post post = new Post(id, uId, postLocation.latitude, postLocation.longitude, url, mediaType);
 
         databasePosts.child(uId).child(id).setValue(post);
+        databaseUnlockedPosts.push().setValue(id);
     }
 
 
