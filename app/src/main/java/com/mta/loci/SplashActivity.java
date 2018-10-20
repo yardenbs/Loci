@@ -10,6 +10,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,10 +32,11 @@ public class SplashActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
+        String token = FirebaseInstanceId.getInstance().getToken();
 
         if(requestCode == RC_SIGN_IN){
             if(resultCode == RESULT_OK){
-                writeNewUser(fUser.getUid(), fUser.getDisplayName());
+                writeNewUser(fUser, token);
                 startHomeActivity();
             }
             else if(resultCode == RESULT_CANCELED){
@@ -75,11 +77,11 @@ public class SplashActivity extends Activity {
                 RC_SIGN_IN);
     }
 
-    private void writeNewUser(String uId, String name) {
+    private void writeNewUser(FirebaseUser fUser, String token) {
         DatabaseReference usersRef = FirebaseDatabase.getInstance()
                                     .getReference("Users");
-        LociUser lociUser = new LociUser(uId, name);
-        usersRef.child(uId).setValue(lociUser);
+        LociUser lociUser = new LociUser(fUser.getUid(),fUser.getEmail(),fUser.getDisplayName(), token);
+        usersRef.child(fUser.getUid()).setValue(lociUser);
     }
 }
 

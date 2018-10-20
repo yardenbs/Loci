@@ -14,9 +14,10 @@ import com.bumptech.glide.request.RequestOptions;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
-public class LociPostActivity extends AppCompatActivity {
+public class LociPostActivity extends AppCompatActivity implements  OnUserFromDBCallback, OnPostFromDBCallback {
 
     private  Post mPost;
+    private LociUser mCreator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,12 +34,13 @@ public class LociPostActivity extends AppCompatActivity {
 
 
         ImageView postImageView = (ImageView) findViewById(R.id.image);
-       mPost =  PostUtils.getPostFromDatabase(postId, creatorId);
-       if(mPost != null) {
+        PostUtils.getPostFromDatabase(this, postId, creatorId);
+
+        if(mPost != null) {
            loadImage(mPost.getMediaUrl(), postImageView);
            TextView creatorTextView = (TextView) findViewById(R.id.creator);
-           LociUser creator =  LociUtil.getUserFromDatabase(creatorId);
-           creatorTextView.setText(creator.getName());
+           LociUtil.getUserFromDatabase(this,creatorId);
+           creatorTextView.setText(mCreator.getName());
        }
 
     }
@@ -53,5 +55,15 @@ public class LociPostActivity extends AppCompatActivity {
                         .centerCrop())
                 .transition(withCrossFade())
                 .into(imageView);
+    }
+
+    @Override
+    public void update(LociUser user) {
+        mCreator = user;
+    }
+
+    @Override
+    public void UpdateFromDB(Post post) {
+        mPost = post;
     }
 }

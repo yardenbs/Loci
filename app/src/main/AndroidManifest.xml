@@ -43,15 +43,8 @@
         <activity
             android:name=".FriendListActivity"
             android:label="@string/title_activity_firend_list" />
-        <activity
-            android:name=".NotificationsActivity"
-            android:label="notifications" />
-        <activity
-            android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings" />
         <activity android:name=".UserProfileActivity" />
         <activity android:name=".HomeActivity" />
-        <activity android:name=".PhotoPlayer" />
 
         <meta-data
             android:name="com.google.android.gms.version"
