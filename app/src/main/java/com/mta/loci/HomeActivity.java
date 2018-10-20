@@ -69,7 +69,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     // User needs to be initialized in OnCreate: //fix
     private LociUser mUser;
-    
+
     private Button mButtonHome;
     private Button mButtonSearch;
     private Button mButtonPost;
@@ -87,10 +87,6 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         mButtonPost = (Button) findViewById(R.id.buttonPost);
         mButtonFeed = (Button) findViewById(R.id.buttonFeed);
         mButtonUserProfile = (Button) findViewById(R.id.buttonUserProfile);
-
-        String uid = LociUtil.getCurrentUserId();
-        //mUser = new LociUser(LociUtil.getCurrentUserId() ,LociUtil.getUserFromDatabase(uid).getName());
-      //  mUser = new LociUser(uid,LociUtil.getUserFromDatabase(uid).getName());
 
         mButtonUserProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -285,6 +281,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         Log.d(TAG, "--> HomeActivity --> onCreate");
         InitUI();
+
         mUser.updateUserFromDB();
         //TODO: refresh data service to run on separate thread!
         //fetchFriendsLists();
@@ -332,6 +329,8 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         Log.d(TAG, "<-- HomeActivity <-- onCreate");
     }
+
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
