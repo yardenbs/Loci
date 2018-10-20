@@ -54,7 +54,7 @@ class LociUtil {
         return null;
     }
 
-    public static void getUserFromDatabase(final OnUserFromDBCallback onUserFromDBCallback, String uid ) {
+    public static void getUserFromDatabase(String uid ) {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference databaseUsers = database.getReference("Users");
@@ -63,7 +63,6 @@ class LociUtil {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mLociUser = dataSnapshot.getValue(LociUser.class);
-                onUserFromDBCallback.update(mLociUser);
             }
 
             @Override

@@ -44,7 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class HomeActivity extends AppCompatActivity implements OnUserFromDBCallback, OnMapReadyCallback, LocationListener, GoogleMap.OnInfoWindowLongClickListener {
+public class HomeActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener, GoogleMap.OnInfoWindowLongClickListener {
 
     private final String TAG = this.getClass().getName();
     private static final String LOCI_USER_CODE = "0";
@@ -73,7 +73,7 @@ public class HomeActivity extends AppCompatActivity implements OnUserFromDBCallb
     private String mProvider;
 
     // User needs to be initialized in OnCreate: //fix
-    private static LociUser mUser = new LociUser();
+    private  LociUser mUser;
 
     private Button mButtonHome;
     private Button mButtonSearch;
@@ -498,10 +498,5 @@ public class HomeActivity extends AppCompatActivity implements OnUserFromDBCallb
     public void onInfoWindowLongClick(Marker marker) {
         String postId = (String) marker.getTag();
         // post ==> playMedia(); // TODO: replace this statement with a call to the Post Viewing activity, and send the postId in the intent
-    }
-
-    @Override
-    public void update(LociUser user) {
-        mUser = user;
     }
 }

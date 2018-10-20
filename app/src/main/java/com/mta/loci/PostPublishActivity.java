@@ -33,10 +33,10 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 
-public class PostPublishActivity extends AppCompatActivity implements OnMapReadyCallback, OnUserFromDBCallback {
+public class PostPublishActivity extends AppCompatActivity implements OnMapReadyCallback {
     private final String TAG = this.getClass().getName();
     private LatLng mPostLocation;
-    private LociUser mUser;
+    private String mUserID;
     private FloatingActionButton mPublishButton;
     private String mMediaType;
     private Uri mMediaUri;
@@ -58,11 +58,9 @@ public class PostPublishActivity extends AppCompatActivity implements OnMapReady
         mMediaUri = Uri.parse(imageUriString);
         mPostLocation = getIntent().getExtras().getParcelable("latLng");
         mMediaType = getIntent().getStringExtra("mediaType");
-        LociUtil.getUserFromDatabase(this, LociUtil.getCurrentUserId());
+        mUserID = FirebaseAuth.getInstance().getUid();
         InitUI();
         initPublishButton();
-
-
     }
 
     private void initMapView() {
@@ -111,7 +109,7 @@ public class PostPublishActivity extends AppCompatActivity implements OnMapReady
     private void uploadMediaAndPost(final Uri localUri, final LatLng postLocation) {
 
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-        final StorageReference photoRef = storageRef.child(mUser.GetUserId()).child("photos").child(localUri.getPath());
+        final StorageReference photoRef = storageRef.child(mUserID).child("photos").child(localUri.getPath());
 
         UploadTask uploadTask = photoRef.putFile(localUri);
 
@@ -129,21 +127,21 @@ public class PostPublishActivity extends AppCompatActivity implements OnMapReady
             public void onComplete(@NonNull Task<Uri> task) {
                 if (task.isSuccessful()) {
                     Uri downloadUrl = task.getResult();
-                    uploadPostToDatabase(downloadUrl.getPath(), "photo", postLocation, mUser.GetUserId());
+                    uploadPostToDatabase(downloadUrl.getPath(), "photo", postLocation);
                 }
             }
         });
     }
 
-    private void uploadPostToDatabase(String url, String mediaType ,LatLng postLocation, String uId){
+    private void uploadPostToDatabase(String url, String mediaType ,LatLng postLocation){
 
         DatabaseReference databasePosts = FirebaseDatabase.getInstance().getReference("Posts");
-        DatabaseReference databaseUnlockedPosts = FirebaseDatabase.getInstance().getReference("Users").child(uId).child("UnlockedPosts");
+        DatabaseReference databaseUnlockedPosts = FirebaseDatabase.getInstance().getReference("Users").child(mUserID).child("UnlockedPosts");
 
         String id = databasePosts.push().getKey();
-        Post post = new Post(id, uId, postLocation.latitude, postLocation.longitude, url, mediaType);
+        Post post = new Post(id, mUserID, postLocation.latitude, postLocation.longitude, url, mediaType);
 
-        databasePosts.child(uId).child(id).setValue(post);
+        databasePosts.child(mUserID).child(mUserID).setValue(post);
         databaseUnlockedPosts.push().setValue(id);
     }
 
@@ -212,10 +210,5 @@ public class PostPublishActivity extends AppCompatActivity implements OnMapReady
     public void onLowMemory() {
         super.onLowMemory();
         mapView.onLowMemory();
-    }
-
-    @Override
-    public void update(LociUser user) {
-        mUser = user;
     }
 }

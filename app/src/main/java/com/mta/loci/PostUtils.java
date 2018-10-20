@@ -53,7 +53,7 @@ class PostUtils {
         return (double) result[0];
     }
 
-    public static void getPostFromDatabase(final OnPostFromDBCallback onPostFromDBCallback,  String postId , String uid) {
+    public static void getPostFromDatabase(String postId , String uid) {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference databasePosts = database.getReference("Posts");
@@ -62,7 +62,6 @@ class PostUtils {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Post post= dataSnapshot.getValue(Post.class);
-                onPostFromDBCallback.UpdateFromDB(post);
             }
 
             @Override

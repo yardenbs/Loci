@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class PostMakerActivity extends AppCompatActivity implements  OnUserFromDBCallback {
+public class PostMakerActivity extends AppCompatActivity {
 
     private Post mPostToPublish = new Post();
     private LatLng mPostLocation;
@@ -27,7 +27,6 @@ public class PostMakerActivity extends AppCompatActivity implements  OnUserFromD
     private Button mWriteTextButton;
     private Button mRecoredVoiceButton;
     private Button mDisplayContentButton;
-    private LociUser mUser;
     private Uri mOutputImgUri;
 
     // This tag is used for error or debug log.
@@ -40,8 +39,6 @@ public class PostMakerActivity extends AppCompatActivity implements  OnUserFromD
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         InitUI();
-        String uid = LociUtil.getCurrentUserId();
-        LociUtil.getUserFromDatabase(this, uid);
         mPostLocation = getIntent().getExtras().getParcelable("4");
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
@@ -113,10 +110,5 @@ public class PostMakerActivity extends AppCompatActivity implements  OnUserFromD
                 storageDir      // directory
         );
         return image;
-    }
-
-    @Override
-    public void update(LociUser user) {
-        mUser = user;
     }
 }
