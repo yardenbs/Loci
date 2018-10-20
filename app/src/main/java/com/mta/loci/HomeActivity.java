@@ -32,8 +32,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -69,7 +73,7 @@ public class HomeActivity extends AppCompatActivity implements OnUserFromDBCallb
     private String mProvider;
 
     // User needs to be initialized in OnCreate: //fix
-    private static LociUser mUser;
+    private static LociUser mUser = new LociUser();
 
     private Button mButtonHome;
     private Button mButtonSearch;
@@ -214,9 +218,10 @@ public class HomeActivity extends AppCompatActivity implements OnUserFromDBCallb
         //assume from onCreate that user has all data from firebase
 
         //wait for user:
-        while ( mUser.getUserPostsIds()==null){
+        while ( mUser==null){
             SystemClock.sleep(100);
         }
+        String postId_0 = mUser.getUserPostsIds().get(0);
         //
 //        if (mUser.getTotalPostsIds() != null) {
 //            ArrayList<Post> posts = fetchPostsFromFirebase(fetchPostsFromFirebase());
@@ -288,7 +293,8 @@ public class HomeActivity extends AppCompatActivity implements OnUserFromDBCallb
         Log.d(TAG, "--> HomeActivity --> onCreate");
         InitUI();
 
-        LociUtil.updateUserFromDB(this, LociUtil.getCurrentUserId());
+        updateUserFromDB();
+
 
         //TODO: refresh data service to run on separate thread!
         //fetchFriendsLists();
@@ -337,7 +343,72 @@ public class HomeActivity extends AppCompatActivity implements OnUserFromDBCallb
         Log.d(TAG, "<-- HomeActivity <-- onCreate");
     }
 
+    private void updateUserFromDB() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference postsRef = database.getReference("Posts");
+        DatabaseReference UsersRef = database.getReference("Users");
 
+        String uid  = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        postsRef.child(uid).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postIdSnapshot: dataSnapshot.getChildren()) {
+                    mUser.getUserPostsIds().add(postIdSnapshot.getKey());
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.e("Firebase", "loadPost:onCancelled", databaseError.toException());
+                // ...
+            }
+        });
+
+        UsersRef.child(uid).child("UnlockedPosts").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postIdSnapshot: dataSnapshot.getChildren()) {
+                    mUser.getUnlockedPostsIds().add(postIdSnapshot.getValue().toString());
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.e("Firebase", "loadPost:onCancelled", databaseError.toException());
+                // ...
+            }
+        });
+
+
+        UsersRef.child(uid).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot userImFollowing: dataSnapshot.child("following").getChildren()) {
+                    mUser.getFollowing().add(userImFollowing.toString());
+                }
+
+                for (DataSnapshot userFollowsMe: dataSnapshot.child("followers").getChildren()) {
+                    mUser.getmFollowers().add(userFollowsMe.toString());
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.e("Firebase", "loadFollowers:onCancelled", databaseError.toException());
+                // ...
+            }
+        });
+
+    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
