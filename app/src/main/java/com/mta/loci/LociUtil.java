@@ -73,81 +73,6 @@ class LociUtil {
         });
     }
 
-    public static void updateUserFromDB(final OnUserFromDBCallback onUserFromDBCallback,String uid){
-
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference postsRef = database.getReference("Posts");
-        DatabaseReference UsersRef = database.getReference("Users");
-        String name = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
-        String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-        //what is the token @Yarden ?
-        String token = "";
-        //
-        mLociUser = new LociUser(uid, email, name, token);
-
-        postsRef.child(uid).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot postIdSnapshot: dataSnapshot.getChildren()) {
-                    mLociUser.getUserPostsIds().add(postIdSnapshot.getKey());
-                }
-
-                onUserFromDBCallback.update(mLociUser);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                Log.e("Firebase", "loadPost:onCancelled", databaseError.toException());
-                // ...
-            }
-        });
-
-        UsersRef.child(uid).child("UnlockedPosts").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot postIdSnapshot: dataSnapshot.getChildren()) {
-                    mLociUser.getUnlockedPostsIds().add(postIdSnapshot.getValue().toString());
-                }
-
-                onUserFromDBCallback.update(mLociUser);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                Log.e("Firebase", "loadPost:onCancelled", databaseError.toException());
-                // ...
-            }
-        });
-
-
-        UsersRef.child(uid).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                for (DataSnapshot userImFollowing: dataSnapshot.child("following").getChildren()) {
-                    mLociUser.getFollowing().add(userImFollowing.toString());
-                }
-
-                for (DataSnapshot userFollowsMe: dataSnapshot.child("followers").getChildren()) {
-                    mLociUser.getmFollowers().add(userFollowsMe.toString());
-                }
-
-                onUserFromDBCallback.update(mLociUser);
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                Log.e("Firebase", "loadFollowers:onCancelled", databaseError.toException());
-                // ...
-            }
-        });
-
-    }
-
 
     public static String getCurrentUserId() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -163,6 +88,5 @@ class LociUtil {
         Intent intent = new Intent(context, HomeActivity.class);
         context.startActivity(intent);
     }
-
 
 }
