@@ -109,9 +109,9 @@ public class PostPublishActivity extends AppCompatActivity implements OnMapReady
     private void uploadMediaAndPost(final Uri localUri, final LatLng postLocation) {
 
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-        final StorageReference photoRef = storageRef.child(mUserID).child("photos").child(localUri.getPath());
+        final StorageReference mediaRef = storageRef.child(mUserID).child(mMediaType).child(localUri.getPath());
 
-        UploadTask uploadTask = photoRef.putFile(localUri);
+        UploadTask uploadTask = mediaRef.putFile(localUri);
 
         Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
             @Override
@@ -120,14 +120,15 @@ public class PostPublishActivity extends AppCompatActivity implements OnMapReady
                     throw task.getException();
                 }
 
-                return photoRef.getDownloadUrl();
+                return mediaRef.getDownloadUrl();
+
             }
         }).addOnCompleteListener(new OnCompleteListener<Uri>() {
             @Override
             public void onComplete(@NonNull Task<Uri> task) {
                 if (task.isSuccessful()) {
                     Uri downloadUrl = task.getResult();
-                    uploadPostToDatabase(downloadUrl.getPath(), "photo", postLocation);
+                    uploadPostToDatabase(downloadUrl.getPath(), mMediaType, postLocation);
                 }
             }
         });
@@ -141,8 +142,8 @@ public class PostPublishActivity extends AppCompatActivity implements OnMapReady
         String id = databasePosts.push().getKey();
         Post post = new Post(id, mUserID, postLocation.latitude, postLocation.longitude, url, mediaType);
 
-        databasePosts.child(mUserID).child(mUserID).setValue(post);
-        databaseUnlockedPosts.push().setValue(id);
+        databasePosts.child(mUserID).child(id).setValue(post);
+        databaseUnlockedPosts.setValue(id);
     }
 
 
