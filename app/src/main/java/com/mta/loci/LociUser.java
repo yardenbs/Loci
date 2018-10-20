@@ -12,6 +12,36 @@ public class LociUser {
     private ArrayList<String> mFollowers = new ArrayList<>(); // list of Uid users that follow me
     private ArrayList<String> mUnlockedPostIds = new ArrayList<>(); // list of Uids of posts that are viewable
 
+
+    public String getmUserId() {
+        return mUserId;
+    }
+
+    public ArrayList<String> getmFollowing() {
+        return mFollowing;
+    }
+
+    public ArrayList<String> getmUnlockedPostIds() {
+        return mUnlockedPostIds;
+    }
+
+
+    public void setmUserId(String mUserId) {
+        this.mUserId = mUserId;
+    }
+
+    public void setmFollowing(ArrayList<String> mFollowing) {
+        this.mFollowing = mFollowing;
+    }
+
+    public void setmFollowers(ArrayList<String> mFollowers) {
+        this.mFollowers = mFollowers;
+    }
+
+    public void setmUnlockedPostIds(ArrayList<String> mUnlockedPostIds) {
+        this.mUnlockedPostIds = mUnlockedPostIds;
+    }
+
     //keep empty c'tor for firebase downloading the user
     public LociUser() { }
 
@@ -34,29 +64,25 @@ public class LociUser {
         mName = name;
     }
 
-    public String GetUserId() {
-        return mUserId;
-    }
-
-    public void SetUserId(String userId) {
-        mUserId = userId;
-    }
-
-    public String getmToken() {return mToken; }
-
-    public void setmToken(String mToken) {this.mToken = mToken; }
-
-    public String getmEmail() { return mEmail; }
-
-    public void setmEmail(String mEmail) {  this.mEmail = mEmail; }
-
-    public ArrayList<String> GetmUnlockedPostIds() {
-        return mUnlockedPostIds;
-    }
-
-    public ArrayList<String> getFollowing() {
-        return mFollowing;
-    }
+//    public void SetUserId(String userId) {
+//        mUserId = userId;
+//    }
+//
+//    public String getmToken() {return mToken; }
+//
+//    public void setmToken(String mToken) {this.mToken = mToken; }
+//
+//    public String getmEmail() { return mEmail; }
+//
+//    public void setmEmail(String mEmail) {  this.mEmail = mEmail; }
+//
+//    public ArrayList<String> GetmUnlockedPostIds() {
+//        return mUnlockedPostIds;
+//    }
+//
+//    public ArrayList<String> getFollowing() {
+//        return mFollowing;
+//    }
 
     public void addNewFollowing(String Uid) {
         mFollowing.add(Uid);

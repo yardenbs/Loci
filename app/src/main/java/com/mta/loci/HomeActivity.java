@@ -12,7 +12,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -68,7 +67,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
     private String mProvider;
 
     // User needs to be initialized in OnCreate: //fix
-    private  LociUser mUser;
+    private  LociUser mUser = new LociUser();
 
     private Button mButtonHome;
     private Button mButtonSearch;
@@ -76,9 +75,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Button mButtonFeed;
     private Button mButtonUserProfile;
 
-
-    private ArrayList<String> mTotalPostsIds = new ArrayList<>(); //all the posts of those I am following
-    private ArrayList<String> mUnlockedPostsIds = new ArrayList<>(); //all the viewable (unlocked) posts (mine + the ones I unlocked)
+    private ArrayList<Post> mTotalPostsIds = new ArrayList<>(); //all the posts of those I am following
 
     private void InitUI() {
         setContentView(R.layout.activity_home);
@@ -204,12 +201,6 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void addMarkers() {
         //assume from onCreate that user has all data from firebase
 
-        //wait for user:
-        while ( mUser==null){
-            SystemClock.sleep(100);
-        }
-        //String postId_0 = mUser.getUserPostsIds().get(0);
-        //
 //        if (mUser.getTotalPostsIds() != null) {
 //            ArrayList<Post> posts = fetchPostsFromFirebase(fetchPostsFromFirebase());
 //            for (Post post : posts) {
@@ -360,7 +351,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 for (DataSnapshot userImFollowing: dataSnapshot.child("following").getChildren()) {
-                    mUser.getFollowing().add(userImFollowing.toString());
+                    mUser.getmFollowing().add(userImFollowing.toString());
                 }
 
                 for (DataSnapshot userFollowsMe: dataSnapshot.child("followers").getChildren()) {

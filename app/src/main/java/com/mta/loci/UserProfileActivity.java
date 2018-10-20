@@ -4,13 +4,11 @@ import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 
@@ -36,18 +34,17 @@ public class UserProfileActivity extends AppCompatActivity {
       //  mCurrentUser = LociUtil.getUserFromDatabase(FirebaseAuth.getInstance().getUid());
      //   mProfileUser = LociUtil.InitUserFromIntent(getIntent()); // get feom intent the user of the profile// todo : fix home activity user intent !!!
 
-        if(mProfileUser.GetUserId() != mCurrentUser.GetUserId()) { // is this is my profile?
+        if(mProfileUser.getUserId() != mCurrentUser.getUserId()) { // is this is my profile?
             mFollowButton.setVisibility(View.VISIBLE);
 
             mFollowButton.setText("Follow");
-            if(mCurrentUser.getFollowing().contains(mProfileUser.GetUserId())){
+            if(mCurrentUser.getmFollowing().contains(mProfileUser.getUserId())){
                 mFollowButton.setText("Unfollow");
             }
             // todo do i follow him?
         }
 
         InitGridView();
-
     }
 
     private void initButtons(){
@@ -56,10 +53,10 @@ public class UserProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(mFollowButton.getText() == "Follow"){
-                    mCurrentUser.addNewFollowing(mProfileUser.GetUserId());
+                    mCurrentUser.addNewFollowing(mProfileUser.getUserId());
                 }
                 else{
-                    mCurrentUser.removeFollowing(mProfileUser.GetUserId());
+                    mCurrentUser.removeFollowing(mProfileUser.getUserId());
                 }
 
             }

@@ -143,7 +143,7 @@ public class PostPublishActivity extends AppCompatActivity implements OnMapReady
         Post post = new Post(id, mUserID, postLocation.latitude, postLocation.longitude, url, mediaType);
 
         databasePosts.child(mUserID).child(id).setValue(post);
-        databaseUnlockedPosts.setValue(id);
+        databaseUnlockedPosts.child(id).setValue(id);
     }
 
 
