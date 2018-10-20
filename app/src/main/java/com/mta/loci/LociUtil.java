@@ -73,11 +73,17 @@ class LociUtil {
         });
     }
 
-    public void updateUserFromDB(final OnUserFromDBCallback onUserFromDBCallback,String uid){
+    public static void updateUserFromDB(final OnUserFromDBCallback onUserFromDBCallback,String uid){
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference postsRef = database.getReference("Posts");
         DatabaseReference UsersRef = database.getReference("Users");
+        String name = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+        String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        //what is the token @Yarden ?
+        String token = "";
+        //
+        mLociUser = new LociUser(uid, email, name, token);
 
         postsRef.child(uid).addValueEventListener(new ValueEventListener() {
             @Override
@@ -85,7 +91,7 @@ class LociUtil {
                 for (DataSnapshot postIdSnapshot: dataSnapshot.getChildren()) {
                     mLociUser.getUserPostsIds().add(postIdSnapshot.getKey());
                 }
-                
+
                 onUserFromDBCallback.update(mLociUser);
             }
 

@@ -12,6 +12,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -39,7 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class HomeActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener, GoogleMap.OnInfoWindowLongClickListener {
+public class HomeActivity extends AppCompatActivity implements OnUserFromDBCallback, OnMapReadyCallback, LocationListener, GoogleMap.OnInfoWindowLongClickListener {
 
     private final String TAG = this.getClass().getName();
     private static final String LOCI_USER_CODE = "0";
@@ -68,7 +69,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
     private String mProvider;
 
     // User needs to be initialized in OnCreate: //fix
-    private LociUser mUser;
+    private static LociUser mUser;
 
     private Button mButtonHome;
     private Button mButtonSearch;
@@ -212,6 +213,11 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void addMarkers() {
         //assume from onCreate that user has all data from firebase
 
+        //wait for user:
+        while ( mUser.getUserPostsIds()==null){
+            SystemClock.sleep(100);
+        }
+        //
 //        if (mUser.getTotalPostsIds() != null) {
 //            ArrayList<Post> posts = fetchPostsFromFirebase(fetchPostsFromFirebase());
 //            for (Post post : posts) {
@@ -282,7 +288,8 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         Log.d(TAG, "--> HomeActivity --> onCreate");
         InitUI();
 
-        mUser.updateUserFromDB();
+        LociUtil.updateUserFromDB(this, LociUtil.getCurrentUserId());
+
         //TODO: refresh data service to run on separate thread!
         //fetchFriendsLists();
         //fetchPosts(); //including my own
@@ -420,5 +427,10 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onInfoWindowLongClick(Marker marker) {
         String postId = (String) marker.getTag();
         // post ==> playMedia(); // TODO: replace this statement with a call to the Post Viewing activity, and send the postId in the intent
+    }
+
+    @Override
+    public void update(LociUser user) {
+        mUser = user;
     }
 }

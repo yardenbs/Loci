@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class PostMakerActivity extends AppCompatActivity {
+public class PostMakerActivity extends AppCompatActivity implements  OnUserFromDBCallback {
 
     private Post mPostToPublish = new Post();
     private LatLng mPostLocation;
@@ -40,7 +40,8 @@ public class PostMakerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         InitUI();
-        mUser = LociUtil.InitUserFromIntent(getIntent());
+        String uid = LociUtil.getCurrentUserId();
+        LociUtil.getUserFromDatabase(this, uid);
         mPostLocation = getIntent().getExtras().getParcelable("4");
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
@@ -112,5 +113,10 @@ public class PostMakerActivity extends AppCompatActivity {
                 storageDir      // directory
         );
         return image;
+    }
+
+    @Override
+    public void update(LociUser user) {
+        mUser = user;
     }
 }

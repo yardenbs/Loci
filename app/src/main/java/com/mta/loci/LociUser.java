@@ -2,13 +2,6 @@ package com.mta.loci;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -18,11 +11,11 @@ public class LociUser implements Parcelable {
     private String mUserId;
     private String mEmail;
     private String mToken;
-    private ArrayList<String> mFollowing; // list of Uid users that i folllow
-    private ArrayList<String> mFollowers; // list of Uid users that folllow me
-    private ArrayList<String> mUserPostsIds; //my posts
-    private ArrayList<String> mTotalPostsIds; //all the posts of those I am following + mine
-    private ArrayList<String> mUnlockedPostsIds; //all the viewable (unlocked) posts (mine + the ones I unlocked)
+    private ArrayList<String> mFollowing = new ArrayList<>(); // list of Uid users that i folllow
+    private ArrayList<String> mFollowers = new ArrayList<>(); // list of Uid users that folllow me
+    private ArrayList<String> mUserPostsIds = new ArrayList<>(); //my posts
+    private ArrayList<String> mTotalPostsIds = new ArrayList<>(); //all the posts of those I am following + mine
+    private ArrayList<String> mUnlockedPostsIds = new ArrayList<>(); //all the viewable (unlocked) posts (mine + the ones I unlocked)
 
     //keep empty c'tor for firebase downloading the user
     public LociUser() { }
