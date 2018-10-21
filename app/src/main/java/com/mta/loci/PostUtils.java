@@ -38,8 +38,9 @@ class PostUtils {
     }
 
     public static boolean AttemptUnlock(Location origin, Post post){
-        return MINIMUM_UNLOCKING_DISTANCE <= getDistanceBetween(
-                new LatLng(origin.getLatitude(), origin.getLatitude()), post.getmLatlng());
+        double dist = getDistanceBetween(
+                new LatLng(origin.getLatitude(), origin.getLongitude()), post.getmLatlng());
+        return MINIMUM_UNLOCKING_DISTANCE >= dist;
     }
 
     private static Double getDistanceBetween(LatLng latLon1, LatLng latLon2) {
