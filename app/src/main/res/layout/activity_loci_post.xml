@@ -1,29 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".LociPostActivity">
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context=".LociPostActivity">
 
-    <ImageView
-        android:id="@+id/image"
-        android:layout_width="403dp"
-        android:layout_height="299dp"
-        android:layout_gravity="center"
-        android:scaleType="fitCenter"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="95dp" />
+    <FrameLayout
+        android:id="@+id/filter_bar_container"
+        android:layout_width="match_parent"
+        android:layout_height="349dp"
+        android:background="@android:color/darker_gray"
+        android:paddingBottom="12dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/creator"
-        android:layout_width="387dp"
-        android:layout_height="97dp"
-        android:layout_gravity="bottom"
-        android:background="#00000c"
-        android:padding="10dp"
-        android:text="----"
-        android:textColor="#fff"
-        android:textSize="20dp" />
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="382dp"
+            android:layout_height="match_parent"
+            android:padding="4dp">
+
+            <Button
+                android:id="@+id/buttonCreatorName"
+                android:layout_width="154dp"
+                android:layout_height="48dp"
+                android:layout_marginBottom="4dp"
+                android:layout_marginEnd="124dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="124dp"
+                android:layout_marginStart="8dp"
+                android:background="@android:color/holo_orange_light"
+                android:text="Name"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <ImageView
+                android:id="@+id/imageViewPost"
+                android:layout_width="347dp"
+                android:layout_height="240dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:src="@color/colorAccent"
+                app:layout_constraintBottom_toTopOf="@+id/buttonCreatorName"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.32" />
+        </android.support.constraint.ConstraintLayout>
+
+    </FrameLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/commentsList"
+        android:layout_width="match_parent"
+        android:layout_height="211dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/filter_bar_container"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/buttonNewComment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginRight="16dp"
+        android:src="@drawable/ic_filter_24dp"
+        app:elevation="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
