@@ -38,7 +38,7 @@ public class LociPostActivity extends AppCompatActivity {
         setContentView(R.layout.activity_loci_post);
         ImageView postImageView = (ImageView) findViewById(R.id.image);
         if(mPost != null) {
-           loadImage(mPost.getMediaUrl(), postImageView);
+           loadImage(mPost.getmMediaUrl(), postImageView);
            TextView creatorTextView = (TextView) findViewById(R.id.creator);
            creatorTextView.setText(mCreator.getName());
        }

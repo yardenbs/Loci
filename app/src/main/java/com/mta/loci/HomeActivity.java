@@ -29,6 +29,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -75,7 +76,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Button mButtonFeed;
     private Button mButtonUserProfile;
 
-    private ArrayList<Post> mTotalPostsIds = new ArrayList<>(); //all the posts of those I am following
+    private ArrayList<Post> mTotalPostsIds; //all the posts of those I am following
 
     private void InitUI() {
         setContentView(R.layout.activity_home);
@@ -201,39 +202,18 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void addMarkers() {
         //assume from onCreate that user has all data from firebase
 
-//        if (mUser.getTotalPostsIds() != null) {
-//            ArrayList<Post> posts = fetchPostsFromFirebase(fetchPostsFromFirebase());
-//            for (Post post : posts) {
-//
-//                if (post.RequestKill()) {
-//                    continue;
-//                }
-//
-//                MarkerOptions mo = post.generateMarkerOptions();
-//                Marker currMarker = gmap.addMarker(mo);
-//                currMarker.setTag(post); //this is what needs to be called when user clicks on the InfoWindow!!!
-//            }
-//        }
-    }
 
-    private ArrayList<Post> fetchPostsFromFirebase(ArrayList<String> totalPostsIds, String uid) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference databaseUsers = database.getReference("Posts");
+        for (Post post : mTotalPostsIds) {
 
-//        databaseUsers.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                mLociUser = dataSnapshot.getValue(LociUser.class);
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//                Log.e(LociUtil.class.getSimpleName(), "loadPost:onCancelled", databaseError.toException());
-//            }
-//        });
-//
-//        return mLociUser;
-        return null;
+            if (post.RequestKill()) {
+                continue;
+            }
+
+            MarkerOptions mo = PostUtils.GenerateMarkerOptions(post);
+            Marker currMarker = gmap.addMarker(mo);
+            currMarker.setTag(post);
+        }
+
     }
 
     @Override
@@ -272,11 +252,14 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         InitUI();
 
         updateUserFromDB();
-
-
+        //MOCK
+        mUser.getmFollowing().add("OvHNTiNI3ygsGX6Sk6PgnppnJHF2");
+        loadFollowingPostsFromDB();
+        //MOCK
         //TODO: refresh data service to run on separate thread!
         //fetchFriendsLists();
         //fetchPosts(); //including my own
+
 
         while (!mLocationPermissionsGranted)
             getPermissions();
@@ -321,9 +304,36 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         Log.d(TAG, "<-- HomeActivity <-- onCreate");
     }
 
-    private void updateUserFromDB() {
+    private void loadFollowingPostsFromDB(){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference postsRef = database.getReference("Posts");
+
+        mTotalPostsIds = new ArrayList<>();
+
+        for (String uid : mUser.getmFollowing()) {
+            postsRef.child(uid).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot post: dataSnapshot.getChildren()) {
+                        mTotalPostsIds.add(post.getValue(Post.class));
+                    }
+                    addMarkers();
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Getting Post failed, log a message
+                    Log.e("Firebase", "loadPost:onCancelled", databaseError.toException());
+                    // ...
+                }
+            });
+        }
+
+    }
+
+
+    private void updateUserFromDB() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference UsersRef = database.getReference("Users");
 
         String uid  = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -457,7 +467,10 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onInfoWindowLongClick(Marker marker) {
-        String postId = (String) marker.getTag();
-        // post ==> playMedia(); // TODO: replace this statement with a call to the Post Viewing activity, and send the postId in the intent
+        Post post = (Post) marker.getTag();
+        Intent intent = new Intent(this, LociPostActivity.class);
+        intent.putExtra("creatorId", post.getmCreatorId());
+        intent.putExtra("postId", post.getId());
+        startActivity(intent);
     }
 }
