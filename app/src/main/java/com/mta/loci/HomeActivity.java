@@ -260,7 +260,6 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         //fetchFriendsLists();
         //fetchPosts(); //including my own
 
-
         while (!mLocationPermissionsGranted)
             getPermissions();
 
@@ -431,7 +430,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapView.onLowMemory();
     }
 
-    //@Yarden @Zuf This is where we check if we can unlock a nearby Loci:
+    // This is where we check if we can unlock a nearby Loci:
     @Override
     public void onLocationChanged(Location location) {
         Log.d(TAG, "onLocationChanged: enter");

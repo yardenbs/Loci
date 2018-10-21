@@ -26,7 +26,7 @@ public class UserProfileActivity extends AppCompatActivity {
     private StaticGridView mStaticGridView;
     private GridViewAdapter mStaticGridAdapter;
     private Button mFollowButton;
-    private DatabaseReference mProfileUserRef;
+    private DatabaseReference mUsersRef;
     private Boolean mIsFollow = false;
     private Boolean mIsThisUsersProfile = false;
     private String mCurrentUserId;
@@ -36,7 +36,25 @@ public class UserProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
-        InitUI();
+
+        mCurrentUserId = FirebaseAuth.getInstance().getUid();
+        mProfileUserId = getIntent().getStringExtra("uid");
+        mUsersRef = FirebaseDatabase.getInstance().getReference().child("users");
+        mUsersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                mProfileUser = dataSnapshot.child(mProfileUserId).getValue(LociUser.class);
+                mCurrentUser = dataSnapshot.child(mCurrentUserId).getValue(LociUser.class);
+                InitUI();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+
+        });
+
         //TODO:  1) getting mProfileUser from DB and mCurrentUser.
         //TODO   2) update DB if user become follower/ unfollower.
         //TODO   3) getting all the unlock post from DB.
@@ -46,25 +64,12 @@ public class UserProfileActivity extends AppCompatActivity {
     private void InitUI() {
         setContentView(R.layout.activity_user_profile);
         initButtons();
-        mCurrentUserId = FirebaseAuth.getInstance().getUid();
-        mProfileUserId = getIntent().getStringExtra("uId");
-        mProfileUserRef = FirebaseDatabase.getInstance().getReference().child("users/" + mProfileUserId);
-        mProfileUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                mProfileUser = dataSnapshot.getValue(LociUser.class);
-                
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-        if(mProfileUserId != mCurrentUserId) { // is this is my profile?
+        if(!mProfileUserId.equals(mCurrentUserId)) { // is this not my profile?
 
             mFollowButton.setText("Follow");
-            if(mCurrentUser.getmFollowing().contains(mProfileUser.getUserId())){
+
+            if(mCurrentUser != null && mCurrentUser.getmFollowing().contains(mProfileUser.getUserId())){
                 mFollowButton.setText("Unfollow");
                 mIsFollow = true;
             }
