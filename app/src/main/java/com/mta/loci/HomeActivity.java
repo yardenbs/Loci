@@ -474,8 +474,8 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
             intent.putExtra("postId", post.getId());
             startActivity(intent);
         }
-
-        Toast.makeText(getBaseContext(), "This Loci is still locked!", Toast.LENGTH_SHORT).show();
-
+        else {
+            Toast.makeText(getBaseContext(), "This Loci is still locked!", Toast.LENGTH_SHORT).show();
+        }
     }
 }
