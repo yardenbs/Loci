@@ -438,10 +438,11 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         mCurrLocation = new Location(location);
 
         if (mTotalPostsIds != null) {
+            String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
             for (Post post : mTotalPostsIds) {
                 if( !mUser.getmUnlockedPostIds().contains(post.getId()) && PostUtils.AttemptUnlock(mCurrLocation, post)){
                     mUser.getmUnlockedPostIds().add(post.getId());
-                    DatabaseReference databaseUnlockedPosts = FirebaseDatabase.getInstance().getReference("Users").child(mUser.getUserId()).child("UnlockedPosts");
+                    DatabaseReference databaseUnlockedPosts = FirebaseDatabase.getInstance().getReference("Users").child(uid).child("UnlockedPosts");
                     databaseUnlockedPosts.child(post.getId()).setValue(post.getId());
                     Toast.makeText(getBaseContext(), "unlocked new " + post.getmMediaType() + "!", Toast.LENGTH_SHORT).show();
                 }
