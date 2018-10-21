@@ -10,36 +10,42 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.ArrayList;
 
 public class UserProfileActivity extends AppCompatActivity {
-    private LociUser mCurrentUser;
     private LociUser mProfileUser; //the user of the profile that we are looking at
+    private LociUser mCurrentUser;
     private StaticGridView mStaticGridView;
     private GridViewAdapter mStaticGridAdapter;
     private Button mFollowButton;
+    private Boolean mIsFollow = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
         InitUI();
+        //TODO:  1) getting mProfileUser from DB and mCurrentUser.
+        //TODO   2) update DB if user become follower/ unfollower.
+        //TODO   3) getting all the unlock post from DB.
+        //
     }
 
     private void InitUI() {
         setContentView(R.layout.activity_user_profile);
         initButtons();
+        String currentUserId = FirebaseAuth.getInstance().getUid();
+        String  profileUserId = getIntent().getStringExtra("uId");
 
-        // get currnt user
-      //  mCurrentUser = LociUtil.getUserFromDatabase(FirebaseAuth.getInstance().getUid());
-     //   mProfileUser = LociUtil.InitUserFromIntent(getIntent()); // get feom intent the user of the profile// todo : fix home activity user intent !!!
-
-        if(mProfileUser.getUserId() != mCurrentUser.getUserId()) { // is this is my profile?
+        if(profileUserId != currentUserId) { // is this is my profile?
             mFollowButton.setVisibility(View.VISIBLE);
 
             mFollowButton.setText("Follow");
             if(mCurrentUser.getmFollowing().contains(mProfileUser.getUserId())){
                 mFollowButton.setText("Unfollow");
+                mIsFollow = true;
             }
             // todo do i follow him?
         }
@@ -52,13 +58,16 @@ public class UserProfileActivity extends AppCompatActivity {
         mFollowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mFollowButton.getText() == "Follow"){
+                if(mIsFollow == false){
                     mCurrentUser.addNewFollowing(mProfileUser.getUserId());
+                    mFollowButton.setText("Unfollow");
                 }
                 else{
                     mCurrentUser.removeFollowing(mProfileUser.getUserId());
+                    mFollowButton.setText("Follow");
                 }
 
+                mIsFollow = !mIsFollow;
             }
         });
     }

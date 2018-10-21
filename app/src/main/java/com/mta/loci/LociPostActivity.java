@@ -2,6 +2,7 @@ package com.mta.loci;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -84,19 +85,21 @@ public class LociPostActivity extends AppCompatActivity {
                 writeNewComment();
             }
         });
+
         ImageView ImageViewpost = (ImageView) findViewById(R.id.imageViewPost);
-        if(mPost != null) {
-           loadImage(mPost.getmMediaUrl(), ImageViewpost);
-           Button creatorNameButton = (Button) findViewById(R.id.buttonCreatorName);
-           creatorNameButton.setText(mCreator.getName());
-           creatorNameButton.setOnClickListener(new View.OnClickListener() {
-               @Override
-               public void onClick(View v) {
-                   //TODO: GOTO UserProfileActiviey
-               }
-           });
-           loadImage(mPost.getmMediaUrl(), ImageViewpost);
-       }
+        loadImage(mPost.getmMediaUrl(), ImageViewpost);
+
+        Button creatorNameButton = (Button) findViewById(R.id.buttonCreatorName);
+        creatorNameButton.setText(mCreator.getName());
+
+        creatorNameButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LociPostActivity.this, UserProfileActivity.class);
+                intent.putExtra("uId", mCreator.getmUserId());
+                startActivity(intent);
+            }
+        });
     }
 
     private void writeNewComment() {
