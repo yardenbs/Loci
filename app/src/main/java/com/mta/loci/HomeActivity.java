@@ -436,17 +436,16 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onLocationChanged(Location location) {
         Log.d(TAG, "onLocationChanged: enter");
         mCurrLocation = new Location(location);
-        //@Yarden @Zuf TODO: remove this after the user has the Posts List
-        //LociUser thisUser = new LociUser();
-        //List<Post> userFriendsPosts = thisUser.mFriendsPosts;
-        //until here
 
-//        if (userFriendsPosts != null) {
-//            for (Post post : userFriendsPosts) {
-//                post.AttemptUnlock(mCurrLocation);
-//                // TODO: add 'toast' or notification for user that he unlocked a new Loci!
-//            }
-//        }
+        if (mTotalPostsIds != null) {
+            for (Post post : mTotalPostsIds) {
+                if( !mUser.getmUnlockedPostIds().contains(post.getId()) && PostUtils.AttemptUnlock(mCurrLocation, post)){
+                    mUser.getmUnlockedPostIds().add(post.getId());
+                    //TODO: add post creator name to post object
+                    Toast.makeText(getBaseContext(), "unlocked new " + post.getmMediaType() + "!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
         Log.d(TAG, "onLocationChanged: done");
     }
 
@@ -468,9 +467,15 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onInfoWindowLongClick(Marker marker) {
         Post post = (Post) marker.getTag();
-        Intent intent = new Intent(this, LociPostActivity.class);
-        intent.putExtra("creatorId", post.getmCreatorId());
-        intent.putExtra("postId", post.getId());
-        startActivity(intent);
+
+        if( mUser.getmUnlockedPostIds().contains(post.getId())){
+            Intent intent = new Intent(this, LociPostActivity.class);
+            intent.putExtra("creatorId", post.getmCreatorId());
+            intent.putExtra("postId", post.getId());
+            startActivity(intent);
+        }
+
+        Toast.makeText(getBaseContext(), "This Loci is still locked!", Toast.LENGTH_SHORT).show();
+
     }
 }
