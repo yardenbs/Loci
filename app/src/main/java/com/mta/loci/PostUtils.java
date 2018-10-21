@@ -17,7 +17,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
-import java.util.Date;
 
 import static android.media.ExifInterface.ORIENTATION_ROTATE_180;
 import static android.media.ExifInterface.ORIENTATION_ROTATE_90;
@@ -27,12 +26,12 @@ class PostUtils {
     public static final double MINIMUM_UNLOCKING_DISTANCE = 15;
 
     public static boolean isOldPost(Post post){
-        return new Date().after(new Date(post.getDatePosted() + PostUtils.SECONDS_IN_DAY));
+        return (System.currentTimeMillis() / 1000) > post.getmDatePosted() + PostUtils.SECONDS_IN_DAY;
     }
 
     //generate markerOptions object from the post provided
     public static MarkerOptions GenerateMarkerOptions(Post post) {
-        MarkerOptions mo = new MarkerOptions().position(post.getLatlng())
+        MarkerOptions mo = new MarkerOptions().position(post.getmLatlng())
                 .title(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
         //TODO    user.icon(); need to get the user's icon here
 
@@ -41,7 +40,7 @@ class PostUtils {
 
     public static boolean AttemptUnlock(Location origin, Post post){
         return MINIMUM_UNLOCKING_DISTANCE <= getDistanceBetween(
-                new LatLng(origin.getLatitude(), origin.getLatitude()), post.getLatlng());
+                new LatLng(origin.getLatitude(), origin.getLatitude()), post.getmLatlng());
     }
 
     private static Double getDistanceBetween(LatLng latLon1, LatLng latLon2) {

@@ -88,6 +88,8 @@ public class LociPostActivity extends AppCompatActivity {
         if(mPost != null) {
            loadImage(mPost.getMediaUrl(), ImageViewpost);
            TextView creatorTextView = (TextView) findViewById(R.id.buttonCreatorName);
+           loadImage(mPost.getmMediaUrl(), postImageView);
+           TextView creatorTextView = (TextView) findViewById(R.id.creator);
            creatorTextView.setText(mCreator.getName());
        }
     }
