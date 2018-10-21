@@ -111,7 +111,7 @@ public class PostPublishActivity extends AppCompatActivity implements OnMapReady
     private void uploadMediaAndPost(final Uri localUri, final LatLng postLocation) {
 
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-        final StorageReference mediaRef = storageRef.child(mUserID).child(mMediaType).child(localUri.getPath());
+        final StorageReference mediaRef = storageRef.child(mUserID).child(mMediaType).child(localUri.getLastPathSegment());
 
         UploadTask uploadTask = mediaRef.putFile(localUri);
 
@@ -130,7 +130,8 @@ public class PostPublishActivity extends AppCompatActivity implements OnMapReady
             public void onComplete(@NonNull Task<Uri> task) {
                 if (task.isSuccessful()) {
                     Uri downloadUrl = task.getResult();
-                    uploadPostToDatabase(downloadUrl.getPath(), mMediaType, postLocation);
+                    uploadPostToDatabase(downloadUrl.toString(), mMediaType, postLocation);
+
                 }
             }
         });
