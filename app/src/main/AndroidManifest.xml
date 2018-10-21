@@ -31,6 +31,12 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <uses-library android:name="com.google.android.maps" />
 
+        <service
+            android:name=".MyFirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

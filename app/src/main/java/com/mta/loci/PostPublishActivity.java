@@ -78,7 +78,8 @@ public class PostPublishActivity extends AppCompatActivity implements OnMapReady
             @Override
             public void onClick(View v) {
                 uploadMediaAndPost(mMediaUri,mPostLocation);
-                LociUtil.goHome(PostPublishActivity.this);
+                finish();
+                //LociUtil.goHome(PostPublishActivity.this);
             }
         });
 
@@ -90,7 +91,8 @@ public class PostPublishActivity extends AppCompatActivity implements OnMapReady
         mLocationTextView = findViewById(R.id.LocationText);
         mTakenImageView = findViewById(R.id.imageView);
         initMapView();
-        mLocationTextView.setText(GeoUtils.getLatLngAddress(mPostLocation, this.getBaseContext()));
+        if (null != mPostLocation)
+            mLocationTextView.setText(GeoUtils.getLatLngAddress(mPostLocation, this.getBaseContext()));
         LoadAndDisplayTakenImage();
     }
 

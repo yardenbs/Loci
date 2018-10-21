@@ -5,12 +5,18 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -20,6 +26,7 @@ public class UserProfileActivity extends AppCompatActivity {
     private StaticGridView mStaticGridView;
     private GridViewAdapter mStaticGridAdapter;
     private Button mFollowButton;
+    private DatabaseReference mProfileUserRef;
     private Boolean mIsFollow = false;
 
     @Override
@@ -37,8 +44,20 @@ public class UserProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_profile);
         initButtons();
         String currentUserId = FirebaseAuth.getInstance().getUid();
-        String  profileUserId = getIntent().getStringExtra("uId");
+        String profileUserId = getIntent().getStringExtra("uId");
+        mProfileUserRef = FirebaseDatabase.getInstance().getReference().child("users/" + profileUserId);
+        mProfileUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                mProfileUser = dataSnapshot.getValue(LociUser.class);
+                
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         if(profileUserId != currentUserId) { // is this is my profile?
             mFollowButton.setVisibility(View.VISIBLE);
 

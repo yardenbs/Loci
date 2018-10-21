@@ -397,8 +397,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onResume() {
         super.onResume();
-        this.mapView.onResume();
-
+        mapView.onResume();
     }
 
     @Override

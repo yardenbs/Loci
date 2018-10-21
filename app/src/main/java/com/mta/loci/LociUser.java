@@ -7,6 +7,11 @@ public class LociUser {
     private String mName;
     private String mUserId;
     private String mEmail;
+
+    public void setToken(String token) {
+        this.mToken = token;
+    }
+
     private String mToken;
     private ArrayList<String> mFollowing = new ArrayList<>(); // list of Uid users that i follow
     private ArrayList<String> mFollowers = new ArrayList<>(); // list of Uid users that follow me

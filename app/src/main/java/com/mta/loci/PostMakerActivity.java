@@ -75,6 +75,7 @@ public class PostMakerActivity extends AppCompatActivity {
                     cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, mOutputImgUri);
                     // Start the camera activity with the request code and waiting for the app process result.
                     cameraIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+
                     startActivityForResult(cameraIntent, REQUEST_CODE_TAKE_PICTURE);
 
                 } catch (IOException ex) {
@@ -94,6 +95,7 @@ public class PostMakerActivity extends AppCompatActivity {
             intent.putExtra("latLng", mPostLocation);
             intent.putExtra("mediaType", "photo");
             startActivity(intent);
+            finish();
         }
     }
 

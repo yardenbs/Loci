@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -41,7 +43,7 @@ public class LociPostActivity extends AppCompatActivity {
     private  DatabaseReference mCommentsRef;
     private ArrayList<Comment> mCommentsList = new ArrayList<>();
     private RecyclerView mRecyclerView;
-
+    private FloatingActionButton mNewCommentButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,8 +80,8 @@ public class LociPostActivity extends AppCompatActivity {
 
     private void initUI() {
         initRecyclerView();
-        Button newCommentButton = (Button) findViewById(R.id.buttonNewComment);
-        newCommentButton.setOnClickListener(new View.OnClickListener() {
+        mNewCommentButton = findViewById(R.id.buttonNewComment);
+        mNewCommentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 writeNewComment();
@@ -133,11 +135,9 @@ public class LociPostActivity extends AppCompatActivity {
 
     private void loadImage(String url, ImageView imageView) {
         Context context = imageView.getContext();
-        ColorDrawable cd = new ColorDrawable(ContextCompat.getColor(context, R.color.common_google_signin_btn_text_light_default));
         Glide.with(context)
                 .load(url)
                 .apply(new RequestOptions()
-                        .placeholder(cd)
                         .centerCrop())
                 .transition(withCrossFade())
                 .into(imageView);
