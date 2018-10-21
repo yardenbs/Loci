@@ -142,7 +142,8 @@ public class PostPublishActivity extends AppCompatActivity implements OnMapReady
         DatabaseReference databaseUnlockedPosts = FirebaseDatabase.getInstance().getReference("Users").child(mUserID).child("UnlockedPosts");
 
         String id = databasePosts.push().getKey();
-        Post post = new Post(id, mUserID, postLocation.latitude, postLocation.longitude, url, mediaType);
+        Post post = new Post(id, mUserID, postLocation.latitude, postLocation.longitude,
+                url, mediaType, FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
 
         databasePosts.child(mUserID).child(id).setValue(post);
         databaseUnlockedPosts.child(id).setValue(id);

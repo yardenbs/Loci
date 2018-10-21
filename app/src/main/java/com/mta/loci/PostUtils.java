@@ -9,7 +9,6 @@ import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,7 +31,7 @@ class PostUtils {
     //generate markerOptions object from the post provided
     public static MarkerOptions GenerateMarkerOptions(Post post) {
         MarkerOptions mo = new MarkerOptions().position(post.getmLatlng())
-                .title(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+                .title(post.getmCreatorName());
         //TODO    user.icon(); need to get the user's icon here
 
         return mo;

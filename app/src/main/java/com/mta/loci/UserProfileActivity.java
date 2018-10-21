@@ -28,6 +28,9 @@ public class UserProfileActivity extends AppCompatActivity {
     private Button mFollowButton;
     private DatabaseReference mProfileUserRef;
     private Boolean mIsFollow = false;
+    private Boolean mIsThisUsersProfile = false;
+    private String mCurrentUserId;
+    private String mProfileUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +46,9 @@ public class UserProfileActivity extends AppCompatActivity {
     private void InitUI() {
         setContentView(R.layout.activity_user_profile);
         initButtons();
-        String currentUserId = FirebaseAuth.getInstance().getUid();
-        String profileUserId = getIntent().getStringExtra("uId");
-        mProfileUserRef = FirebaseDatabase.getInstance().getReference().child("users/" + profileUserId);
+        mCurrentUserId = FirebaseAuth.getInstance().getUid();
+        mProfileUserId = getIntent().getStringExtra("uId");
+        mProfileUserRef = FirebaseDatabase.getInstance().getReference().child("users/" + mProfileUserId);
         mProfileUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -58,8 +61,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
             }
         });
-        if(profileUserId != currentUserId) { // is this is my profile?
-            mFollowButton.setVisibility(View.VISIBLE);
+        if(mProfileUserId != mCurrentUserId) { // is this is my profile?
 
             mFollowButton.setText("Follow");
             if(mCurrentUser.getmFollowing().contains(mProfileUser.getUserId())){
@@ -67,6 +69,10 @@ public class UserProfileActivity extends AppCompatActivity {
                 mIsFollow = true;
             }
             // todo do i follow him?
+        }
+        else{
+            mFollowButton.setText("Logout");
+            mIsThisUsersProfile = true;
         }
 
         InitGridView();
@@ -77,18 +83,44 @@ public class UserProfileActivity extends AppCompatActivity {
         mFollowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mIsFollow == false){
-                    mCurrentUser.addNewFollowing(mProfileUser.getUserId());
-                    mFollowButton.setText("Unfollow");
+
+                if(!mIsThisUsersProfile) {
+
+                    if (mIsFollow == false) {
+                        mCurrentUser.addNewFollowing(mProfileUser.getUserId());
+                        mFollowButton.setText("Unfollow");
+                    } else {
+                        mCurrentUser.removeFollowing(mProfileUser.getUserId());
+                        mFollowButton.setText("Follow");
+                    }
+
+                    updateDatabaseFollowingFollowers(mIsFollow);
+                    mIsFollow = !mIsFollow;
                 }
                 else{
-                    mCurrentUser.removeFollowing(mProfileUser.getUserId());
-                    mFollowButton.setText("Follow");
+                    FirebaseAuth.getInstance().signOut();
+                    finish();
+                    Intent intent = new Intent( getBaseContext(), SplashActivity.class);
+                    startActivity(intent);
                 }
-
-                mIsFollow = !mIsFollow;
             }
         });
+    }
+
+    private void updateDatabaseFollowingFollowers(Boolean isFollow) {
+
+        DatabaseReference databaseRefCurrentUser = FirebaseDatabase.getInstance().getReference("Users").child(mCurrentUserId);
+        DatabaseReference databaseRefProfileUser = FirebaseDatabase.getInstance().getReference("Users").child(mProfileUserId);
+
+        if(!isFollow){
+            databaseRefCurrentUser.child("Following").child(mProfileUserId).setValue(mProfileUserId);
+            databaseRefProfileUser.child("Followers").child(mCurrentUserId).setValue(mCurrentUserId);
+        }
+        else{
+            databaseRefCurrentUser.child("Following").child(mProfileUserId).removeValue();
+            databaseRefProfileUser.child("Followers").child(mCurrentUserId).removeValue();
+        }
+
     }
 
 

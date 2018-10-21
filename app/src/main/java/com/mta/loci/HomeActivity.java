@@ -309,8 +309,10 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         DatabaseReference postsRef = database.getReference("Posts");
 
         mTotalPostsIds = new ArrayList<>();
+        ArrayList<String> uidList =  new ArrayList<>(mUser.getmFollowing());
+        uidList.add(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-        for (String uid : mUser.getmFollowing()) {
+        for (String uid : uidList) {
             postsRef.child(uid).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -330,7 +332,6 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
     }
-
 
     private void updateUserFromDB() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -360,11 +361,11 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                for (DataSnapshot userImFollowing: dataSnapshot.child("following").getChildren()) {
+                for (DataSnapshot userImFollowing: dataSnapshot.child("Following").getChildren()) {
                     mUser.getmFollowing().add(userImFollowing.toString());
                 }
 
-                for (DataSnapshot userFollowsMe: dataSnapshot.child("followers").getChildren()) {
+                for (DataSnapshot userFollowsMe: dataSnapshot.child("Followers").getChildren()) {
                     mUser.getmFollowers().add(userFollowsMe.toString());
                 }
 

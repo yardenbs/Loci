@@ -6,6 +6,7 @@ public class Post {
 
     private String id;
     private String mCreatorId; //user who made the post
+    private String mCreatorName;
     private com.mta.loci.LatLng mLatlng; //where the post was made
     private long mDatePosted; //in seconds!; // for purging purposes
 
@@ -16,9 +17,10 @@ public class Post {
 
     public Post(){}
 
-    Post(String id, String creatorId, double lat, double lng, String url, String mediaType ) {
+    Post(String id, String creatorId, double lat, double lng, String url, String mediaType , String name) {
         this.id = id;
         mCreatorId = creatorId;
+        mCreatorName = name;
         mMediaUrl = url;
         mMediaType = mediaType;
         mLatlng = new com.mta.loci.LatLng(lat,lng);
@@ -104,5 +106,13 @@ public class Post {
 
     public void setmKill(boolean mKill) {
         this.mKill = mKill;
+    }
+
+    public String getmCreatorName() {
+        return mCreatorName;
+    }
+
+    public void setmCreatorName(String mCreatorName) {
+        this.mCreatorName = mCreatorName;
     }
 }

@@ -100,7 +100,7 @@
                 android:id="@+id/FollowButton"
                 android:layout_width="87dp"
                 android:layout_height="37dp"
-                android:visibility="invisible"
+                android:visibility="visible"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
