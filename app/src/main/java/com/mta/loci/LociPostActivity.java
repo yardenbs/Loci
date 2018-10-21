@@ -56,7 +56,7 @@ public class LociPostActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(new CommentAdapter(mCommentsList));
-        mCommentsRef = FirebaseDatabase.getInstance().getReference("Comments/" + mPost.getPostId());
+        mCommentsRef = FirebaseDatabase.getInstance().getReference("Comments/" + mPost.getId());
         mCommentsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -86,11 +86,16 @@ public class LociPostActivity extends AppCompatActivity {
         });
         ImageView ImageViewpost = (ImageView) findViewById(R.id.imageViewPost);
         if(mPost != null) {
-           loadImage(mPost.getMediaUrl(), ImageViewpost);
-           TextView creatorTextView = (TextView) findViewById(R.id.buttonCreatorName);
-           loadImage(mPost.getmMediaUrl(), postImageView);
-           TextView creatorTextView = (TextView) findViewById(R.id.creator);
-           creatorTextView.setText(mCreator.getName());
+           loadImage(mPost.getmMediaUrl(), ImageViewpost);
+           Button creatorNameButton = (Button) findViewById(R.id.buttonCreatorName);
+           creatorNameButton.setText(mCreator.getName());
+           creatorNameButton.setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View v) {
+                   //TODO: GOTO UserProfileActiviey
+               }
+           });
+           loadImage(mPost.getmMediaUrl(), ImageViewpost);
        }
     }
 
@@ -119,7 +124,7 @@ public class LociPostActivity extends AppCompatActivity {
 
     private void uploadCommentToDatebase(String commentText) {
         String uid = FirebaseAuth.getInstance().getUid();
-        Comment comment = new Comment(uid, mPost.getPostId(), commentText);
+        Comment comment = new Comment(uid, mPost.getId(), commentText);
         mCommentsRef.push().setValue(comment);
     }
 
