@@ -54,8 +54,6 @@ public class UserProfileActivity extends AppCompatActivity {
             }
 
         });
-
-        //TODO:  1) getting mProfileUser from DB and mCurrentUser.
         //TODO   2) update DB if user become follower/ unfollower.
         //TODO   3) getting all the unlock post from DB.
         //

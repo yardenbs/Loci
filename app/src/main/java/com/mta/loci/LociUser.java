@@ -11,7 +11,6 @@ public class LociUser {
     public void setToken(String token) {
         this.mToken = token;
     }
-
     private String mToken;
     private ArrayList<String> mFollowing = new ArrayList<>(); // list of Uid users that i follow
     private ArrayList<String> mFollowers = new ArrayList<>(); // list of Uid users that follow me
@@ -73,13 +72,13 @@ public class LociUser {
 //        mUserId = userId;
 //    }
 //
-//    public String getmToken() {return mToken; }
+   public String getmToken() {return mToken; }
 //
-//    public void setmToken(String mToken) {this.mToken = mToken; }
+    public void setmToken(String mToken) {this.mToken = mToken; }
 //
-//    public String getmEmail() { return mEmail; }
+   public String getmEmail() { return mEmail; }
 //
-//    public void setmEmail(String mEmail) {  this.mEmail = mEmail; }
+   public void setmEmail(String mEmail) {  this.mEmail = mEmail; }
 //
 //    public ArrayList<String> GetmUnlockedPostIds() {
 //        return mUnlockedPostIds;

@@ -3,9 +3,11 @@ package com.mta.loci;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -124,8 +126,10 @@ public class LociPostActivity extends AppCompatActivity {
     }
 
     private void uploadCommentToDatebase(final String commentText) {
+
          final String uid = FirebaseAuth.getInstance().getUid();
         mCurrentUserRef = FirebaseDatabase.getInstance().getReference().child("Users/").child(uid).child("name");
+
         mCurrentUserRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
