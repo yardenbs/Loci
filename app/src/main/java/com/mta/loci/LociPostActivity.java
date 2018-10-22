@@ -87,7 +87,7 @@ public class LociPostActivity extends AppCompatActivity {
         });
 
         ImageView ImageViewpost = (ImageView) findViewById(R.id.imageViewPost);
-        loadImage(mPost.getmMediaUrl(), ImageViewpost);
+        LociUtil.loadImage(mPost.getmMediaUrl(), ImageViewpost);
 
         Button creatorNameButton = (Button) findViewById(R.id.buttonCreatorName);
         creatorNameButton.setText(mCreator.getName());
@@ -145,18 +145,6 @@ public class LociPostActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    private void loadImage(String url, ImageView imageView) {
-        Context context = imageView.getContext();
-        ColorDrawable cd = new ColorDrawable(ContextCompat.getColor(context, R.color.browser_actions_bg_grey));
-        Glide.with(context)
-                .load(url)
-                .apply(new RequestOptions()
-                        .placeholder(cd)
-                        .fitCenter())
-                .transition(withCrossFade())
-                .into(imageView);
     }
 
     private void getPostAndUserFromDatabase(String postId ,final String uid) {

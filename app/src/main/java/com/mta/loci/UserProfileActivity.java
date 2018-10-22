@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -20,12 +21,17 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class UserProfileActivity extends AppCompatActivity {
     private LociUser mProfileUser; //the user of the profile that we are looking at
     private LociUser mCurrentUser;
     private StaticGridView mStaticGridView;
     private GridViewAdapter mStaticGridAdapter;
     private Button mFollowButton;
+    private TextView mUserName;
+    private TextView mUserEmail;
+    private CircleImageView mProfileImage;
     private DatabaseReference mUsersRef;
     private Boolean mIsFollow = false;
     private Boolean mIsThisUsersProfile = false;
@@ -39,7 +45,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
         mCurrentUserId = FirebaseAuth.getInstance().getUid();
         mProfileUserId = getIntent().getStringExtra("uid");
-        mUsersRef = FirebaseDatabase.getInstance().getReference().child("users");
+        mUsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         mUsersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -77,7 +83,14 @@ public class UserProfileActivity extends AppCompatActivity {
             mFollowButton.setText("Logout");
             mIsThisUsersProfile = true;
         }
+        mUserName = findViewById(R.id.textViewUserName);
+        mUserName.setText(mProfileUser.getName());
 
+        mUserEmail = findViewById(R.id.textView_email);
+        mUserEmail.setText(mProfileUser.getmEmail());
+
+        mProfileImage = findViewById(R.id.circleImageProfile);
+        LociUtil.loadImage(mProfileUser.getmPhotoUrl(), mProfileImage);
         InitGridView();
     }
 

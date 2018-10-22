@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">loci</string>
+    <string name="UsersRef">users</string>
     <string name="title_activity_firend_list">firendList</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
