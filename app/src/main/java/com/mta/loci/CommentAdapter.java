@@ -33,6 +33,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
         Comment comment = mCommentsList.get(position);
         holder.getCommentText().setText(comment.getmComment());
+        holder.getCommentCreator().setText(comment.getmCreator() + ":");
     }
 
 
@@ -44,19 +45,24 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     public class CommentViewHolder extends RecyclerView.ViewHolder {
 
         private TextView mCommentText;
+        private TextView mCommentCreator;
 
         public CommentViewHolder(Context context, View view) {
-
             super(view);
             mCommentText = (TextView) view.findViewById(R.id.comment_text);
+            mCommentCreator = (TextView) view.findViewById(R.id.comment_creator);
         }
 
         public TextView getCommentText() {
             return mCommentText;
         }
 
-        public void setUserReview(TextView commentText) {
-            this.mCommentText = commentText;
+        public TextView getCommentCreator() {
+            return mCommentCreator;
+        }
+
+        public TextView getmCommentCreator() {
+            return mCommentCreator;
         }
     }
 }

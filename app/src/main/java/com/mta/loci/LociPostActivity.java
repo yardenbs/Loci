@@ -41,6 +41,7 @@ public class LociPostActivity extends AppCompatActivity {
     private Post mPost;
     private LociUser mCreator;
     private  DatabaseReference mCommentsRef;
+    private  DatabaseReference mCurrentUserRef;
     private ArrayList<Comment> mCommentsList = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private FloatingActionButton mNewCommentButton;
@@ -127,18 +128,34 @@ public class LociPostActivity extends AppCompatActivity {
         builder.show();
     }
 
-    private void uploadCommentToDatebase(String commentText) {
-        String uid = FirebaseAuth.getInstance().getUid();
-        Comment comment = new Comment(uid, mPost.getId(), commentText);
-        mCommentsRef.push().setValue(comment);
+    private void uploadCommentToDatebase(final String commentText) {
+         final String uid = FirebaseAuth.getInstance().getUid();
+        mCurrentUserRef = FirebaseDatabase.getInstance().getReference().child("Users/").child(uid).child("name");
+        mCurrentUserRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String CurrentUsername = dataSnapshot.getValue(String.class);
+                Comment comment = new Comment(uid, mPost.getId(), commentText, CurrentUsername);
+                mCommentsList.add(comment);
+                mCommentsRef.push().setValue(comment);
+                mRecyclerView.getAdapter().notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void loadImage(String url, ImageView imageView) {
         Context context = imageView.getContext();
+        ColorDrawable cd = new ColorDrawable(ContextCompat.getColor(context, R.color.browser_actions_bg_grey));
         Glide.with(context)
                 .load(url)
                 .apply(new RequestOptions()
-                        .centerCrop())
+                        .placeholder(cd)
+                        .fitCenter())
                 .transition(withCrossFade())
                 .into(imageView);
     }

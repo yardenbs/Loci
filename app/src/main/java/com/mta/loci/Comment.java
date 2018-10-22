@@ -1,16 +1,27 @@
 package com.mta.loci;
 
 public class Comment {
-   private String mUid;
+    private String mUid;
+
+    public String getmCreator() {
+        return mCreator;
+    }
+
+    public void setmCreator(String mCreator) {
+        this.mCreator = mCreator;
+    }
+
+    private String mCreator;
     private String mPostId;
     private String mComment;
 
     public Comment() {}
 
-    public Comment(String uId, String postId, String comment) {
+    public Comment(String uId, String postId, String comment, String creator) {
         this.mUid = uId;
         this.mPostId = postId;
         this.mComment = comment;
+        this.mCreator = creator;
     }
 
     public String getmUid() {
