@@ -45,6 +45,7 @@ class LociUtil {
         Glide.with(context)
                 .load(url)
                 .apply(new RequestOptions()
+                        
                         .fitCenter())
                 .transition(withCrossFade())
                 .into(imageView);

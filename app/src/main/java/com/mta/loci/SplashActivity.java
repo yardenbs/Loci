@@ -92,7 +92,8 @@ public class SplashActivity extends Activity {
     private void writeNewUser(FirebaseUser fUser, String token) {
         DatabaseReference usersRef = FirebaseDatabase.getInstance()
                                     .getReference("Users");
-        LociUser lociUser = new LociUser(fUser.getUid(),fUser.getEmail(),fUser.getDisplayName(), token);
+        LociUser lociUser = new LociUser(fUser.getUid(),fUser.getEmail(),fUser.getDisplayName(),
+                                        token, fUser.getPhotoUrl().toString());
         usersRef.child(fUser.getUid()).setValue(lociUser);
     }
 }
