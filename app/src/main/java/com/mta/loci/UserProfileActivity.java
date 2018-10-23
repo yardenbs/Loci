@@ -37,6 +37,9 @@ public class UserProfileActivity extends AppCompatActivity {
     private Boolean mIsThisUsersProfile = false;
     private String mCurrentUserId;
     private String mProfileUserId;
+    private Button mFollowers;
+    private Button mFollowing;
+    private Intent mFollowIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +57,11 @@ public class UserProfileActivity extends AppCompatActivity {
                 mCurrentUser = dataSnapshot.child(mCurrentUserId).getValue(LociUser.class);
                 getFollowersAndFollowing(mProfileUser, mProfileUserId, dataSnapshot);
                 getFollowersAndFollowing(mCurrentUser, mCurrentUserId, dataSnapshot);
+
+                for (DataSnapshot postIdSnapshot: dataSnapshot.child(mCurrentUserId).child("UnlockedPosts").getChildren()) {
+                    mCurrentUser.getUnlockedPostIds().add(postIdSnapshot.getValue().toString());
+                }
+
                 InitUI();
             }
 
@@ -63,9 +71,6 @@ public class UserProfileActivity extends AppCompatActivity {
             }
 
         });
-        //TODO   2) update DB if user become follower/ unfollower.
-        //TODO   3) getting all the unlock post from DB.
-        //
     }
 
     private void getFollowersAndFollowing(LociUser user, String uid, DataSnapshot ds) {
@@ -114,6 +119,9 @@ public class UserProfileActivity extends AppCompatActivity {
 
     private void initButtons(){
         mFollowButton = findViewById(R.id.FollowButton);
+        mFollowers = findViewById(R.id.FollowersButton);
+        mFollowing = findViewById(R.id.FollowingButton);
+
         mFollowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -139,6 +147,32 @@ public class UserProfileActivity extends AppCompatActivity {
                 }
             }
         });
+
+        mFollowing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startFollowListActivity("Following", true);
+            }
+        });
+
+
+        mFollowers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startFollowListActivity("Followers", false);
+            }
+        });
+
+    }
+
+    private void startFollowListActivity(String title, Boolean isRequestForFollowingList) {
+
+        mFollowIntent = new Intent(getBaseContext(), FollowsScrollingActivity.class);
+        mFollowIntent.putExtra("title", title);
+        mFollowIntent.putExtra("isFollowing", isRequestForFollowingList);
+        mFollowIntent.putExtra("uid", mProfileUserId);
+
+        startActivity(mFollowIntent);
     }
 
     private void updateDatabaseFollowingFollowers(Boolean isFollow) {

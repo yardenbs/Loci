@@ -31,12 +31,12 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <uses-library android:name="com.google.android.maps" />
 
-        <service
-            android:name=".MyFirebaseInstanceIDService">
+        <service android:name=".MyFirebaseInstanceIDService">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -59,7 +59,11 @@
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyAL7ZP2magT7ShXhaf39bNU5WJkPDCy248" />
 
-        <activity android:name=".PostPublishActivity"></activity>
+        <activity android:name=".PostPublishActivity" />
+        <activity
+            android:name=".FollowsScrollingActivity"
+            android:label="@string/title_activity_follows_scrolling"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
     </application>
 
 </manifest>

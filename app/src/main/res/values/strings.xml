@@ -182,4 +182,5 @@
         <item>@drawable/image_8</item>
         <item>@drawable/image_9</item>
     </string-array>
+    <string name="title_activity_follows_scrolling">FollowsScrollingActivity</string>
 </resources>
