@@ -49,8 +49,11 @@ public class UserProfileActivity extends AppCompatActivity {
         mUsersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                //get full user (lists as well!
                 mProfileUser = dataSnapshot.child(mProfileUserId).getValue(LociUser.class);
                 mCurrentUser = dataSnapshot.child(mCurrentUserId).getValue(LociUser.class);
+                getFollowersAndFollowing(mProfileUser, mProfileUserId, dataSnapshot);
+                getFollowersAndFollowing(mCurrentUser, mCurrentUserId, dataSnapshot);
                 InitUI();
             }
 
@@ -65,6 +68,18 @@ public class UserProfileActivity extends AppCompatActivity {
         //
     }
 
+    private void getFollowersAndFollowing(LociUser user, String uid, DataSnapshot ds) {
+
+        for( DataSnapshot uidDataSnapshot: ds.child(uid).child("Following").getChildren()){
+            user.getmFollowing().add(uidDataSnapshot.getValue().toString());
+        }
+
+        for( DataSnapshot uidDataSnapshot: ds.child(uid).child("Followers").getChildren()){
+            user.getmFollowers().add(uidDataSnapshot.getValue().toString());
+        }
+
+    }
+
     private void InitUI() {
         setContentView(R.layout.activity_user_profile);
         initButtons();
@@ -73,7 +88,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
             mFollowButton.setText("Follow");
 
-            if(mCurrentUser != null && mCurrentUser.getmFollowing().contains(mProfileUser.getUserId())){
+            if(mCurrentUser.getmFollowing().contains(mProfileUser.getUserId())){
                 mFollowButton.setText("Unfollow");
                 mIsFollow = true;
             }
@@ -90,7 +105,10 @@ public class UserProfileActivity extends AppCompatActivity {
         mUserEmail.setText(mProfileUser.getmEmail());
 
         mProfileImage = findViewById(R.id.circleImageProfile);
-        LociUtil.loadImage(mProfileUser.getmPhotoUrl(), mProfileImage);
+        if(!mProfileUser.getmPhotoUrl().equals("")){
+            LociUtil.loadImage(mProfileUser.getmPhotoUrl(), mProfileImage);
+        }
+
         InitGridView();
     }
 

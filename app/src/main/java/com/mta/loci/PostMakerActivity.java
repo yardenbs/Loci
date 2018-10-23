@@ -1,11 +1,15 @@
 package com.mta.loci;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -57,10 +61,15 @@ public class PostMakerActivity extends AppCompatActivity {
         mWriteTextButton = (Button) findViewById(R.id.writeTextButton);
         mRecoredVoiceButton = (Button) findViewById(R.id.recordVoiceButton);
 
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                CAMERA_SERVICE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
+        }
 
         mTakePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 try {
                     // Create a new temporary file.
                     File outputImageFile = CustomCreateImageFile();
@@ -75,6 +84,7 @@ public class PostMakerActivity extends AppCompatActivity {
                     cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, mOutputImgUri);
                     // Start the camera activity with the request code and waiting for the app process result.
                     cameraIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+
 
                     startActivityForResult(cameraIntent, REQUEST_CODE_TAKE_PICTURE);
 

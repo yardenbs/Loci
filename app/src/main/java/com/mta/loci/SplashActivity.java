@@ -92,8 +92,12 @@ public class SplashActivity extends Activity {
     private void writeNewUser(FirebaseUser fUser, String token) {
         DatabaseReference usersRef = FirebaseDatabase.getInstance()
                                     .getReference("Users");
+        //TODO: fix this photo url issue:
+        String photoUrl;
+        photoUrl = fUser.getPhotoUrl() == null ? "" : fUser.getPhotoUrl().toString();
+        // = "https://imagecdn.acast.com/howdowefixit/image.jpg?w=300&h=300";
         LociUser lociUser = new LociUser(fUser.getUid(),fUser.getEmail(),fUser.getDisplayName(),
-                                        token, fUser.getPhotoUrl().toString());
+                                        token, photoUrl);
         usersRef.child(fUser.getUid()).setValue(lociUser);
     }
 }

@@ -9,39 +9,46 @@
     <FrameLayout
         android:id="@+id/filter_bar_container"
         android:layout_width="match_parent"
-        android:layout_height="349dp"
+        android:layout_height="432dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
         android:background="@android:color/darker_gray"
         android:paddingBottom="12dp"
         android:paddingLeft="12dp"
         android:paddingRight="12dp"
+        app:layout_constraintBottom_toTopOf="@+id/commentsList"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.235">
 
         <android.support.constraint.ConstraintLayout
-            android:layout_width="382dp"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="418dp"
             android:padding="4dp">
 
             <ImageView
                 android:id="@+id/imageViewPost"
-                android:layout_width="344dp"
-                android:layout_height="339dp"
+                android:layout_width="367dp"
+                android:layout_height="406dp"
+                android:layout_marginBottom="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginLeft="4dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginStart="4dp"
                 android:src="@color/colorAccent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintHorizontal_bias="0.8"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="1.0" />
 
             <Button
                 android:id="@+id/buttonCreatorName"
-                android:layout_width="90dp"
+                android:layout_width="122dp"
                 android:layout_height="43dp"
                 android:layout_marginBottom="272dp"
                 android:layout_marginEnd="8dp"
@@ -49,28 +56,21 @@
                 android:layout_marginRight="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:background="@android:color/transparent"
+                android:background="#5f000000"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
                 android:text="Name"
+                android:textColor="@android:color/white"
+                android:textSize="10sp"
                 app:layout_constraintBottom_toBottomOf="@+id/imageViewPost"
-                app:layout_constraintEnd_toEndOf="@+id/imageViewPost"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/imageViewPost"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.072"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.095" />
         </android.support.constraint.ConstraintLayout>
 
     </FrameLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/commentsList"
-        android:layout_width="363dp"
-        android:layout_height="207dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.523"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/filter_bar_container"
-        app:layout_constraintVertical_bias="1.0" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/buttonNewComment"
@@ -82,5 +82,18 @@
         app:elevation="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/commentsList"
+        android:layout_width="363dp"
+        android:layout_height="175dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.333"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.955" />
 
 </android.support.constraint.ConstraintLayout>

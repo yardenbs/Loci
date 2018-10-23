@@ -33,7 +33,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -56,6 +55,8 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private Boolean mLocationPermissionsGranted = false;
     private Boolean mWriteExternalPermissionsGranted = false;
+    private Boolean mWriteExternalCameraPermissionsGranted = false;
+
 
     private MapView mapView;
     private GoogleMap gmap;
@@ -164,6 +165,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         Log.d(TAG, "getPermissions: enter");
         String[] permissions = {FINE_LOCATION,
                 COURSE_LOCATION};
+
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
                 FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
@@ -179,18 +181,22 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
                     permissions,
                     LOCATION_PERMISSION_REQUEST_CODE);
         }
+
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
                 WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             mWriteExternalPermissionsGranted = true;
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         }
+
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
                 CAMERA_SERVICE) == PackageManager.PERMISSION_GRANTED) {
-            mWriteExternalPermissionsGranted = true;
+            mWriteExternalCameraPermissionsGranted = true;
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
         }
+
+
         Log.d(TAG, "getPermissions: done");
 
     }
@@ -237,7 +243,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
             gmap.setMinZoomPreference(MIN_ZOOM);
 
             //add all the markers/posts here!
-            addMarkers();
+            //addMarkers();
             //
 
             // Set a listener for info window events.
@@ -252,14 +258,11 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         Log.d(TAG, "--> HomeActivity --> onCreate");
         InitUI();
 
+        //for unit testing:
+        //mUser.getmFollowing().add("jRgXmQH56qeYq9Q3fEuikSDhj133");
+        //
         updateUserFromDB();
-        //MOCK
-        mUser.getmFollowing().add("OvHNTiNI3ygsGX6Sk6PgnppnJHF2");
-        loadFollowingPostsFromDB();
-        //MOCK
-        //TODO: refresh data service to run on separate thread!
-        //fetchFriendsLists();
-        //fetchPosts(); //including my own
+
 
         while (!mLocationPermissionsGranted)
             getPermissions();
@@ -308,7 +311,10 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         DatabaseReference postsRef = database.getReference("Posts");
 
         mTotalPostsIds = new ArrayList<>();
-        ArrayList<String> uidList =  new ArrayList<>(mUser.getmFollowing());
+        ArrayList<String> uidList = new ArrayList<>();
+        if (mUser.getmFollowing() != null) {
+            uidList = new ArrayList<>(mUser.getmFollowing());
+        }
         uidList.add(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
         for (String uid : uidList) {
@@ -338,43 +344,28 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         String uid  = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        UsersRef.child(uid).child("UnlockedPosts").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot postIdSnapshot: dataSnapshot.getChildren()) {
-                    mUser.getUnlockedPostIds().add(postIdSnapshot.getValue().toString());
-                }
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                Log.e("Firebase", "loadPost:onCancelled", databaseError.toException());
-                // ...
-            }
-        });
-
-
         UsersRef.child(uid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postIdSnapshot: dataSnapshot.child("UnlockedPosts").getChildren()) {
+                    mUser.getUnlockedPostIds().add(postIdSnapshot.getValue().toString());
+                }
 
                 for (DataSnapshot userImFollowing: dataSnapshot.child("Following").getChildren()) {
-                    mUser.getmFollowing().add(userImFollowing.toString());
+                    mUser.getmFollowing().add(userImFollowing.getValue().toString());
                 }
 
                 for (DataSnapshot userFollowsMe: dataSnapshot.child("Followers").getChildren()) {
                     mUser.getmFollowers().add(userFollowsMe.toString());
                 }
 
-
+                loadFollowingPostsFromDB();
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 // Getting Post failed, log a message
-                Log.e("Firebase", "loadFollowers:onCancelled", databaseError.toException());
+                Log.e("Firebase", "loadPost:onCancelled", databaseError.toException());
                 // ...
             }
         });
