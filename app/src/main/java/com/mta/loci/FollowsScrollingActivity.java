@@ -2,12 +2,8 @@ package com.mta.loci;
 
 import android.content.Intent;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -38,6 +34,7 @@ public class FollowsScrollingActivity extends AppCompatActivity {
     private CircleImageView mProfileImage;
     private StaticGridView mStaticGridView;
     private GridViewAdapter mStaticGridAdapter;
+    private String mCurrUserName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +42,7 @@ public class FollowsScrollingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_follows_scrolling);
 
         mProfileUserId = getIntent().getStringExtra("uid");
-        getIntent().getBooleanExtra("isFollowing", mIsFollowing);
+        mIsFollowing = getIntent().getBooleanExtra("isFollowing", true);
         mTitle = getIntent().getStringExtra("title");
 
         mUsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
@@ -65,14 +62,6 @@ public class FollowsScrollingActivity extends AppCompatActivity {
 
         });
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
     }
 
     private void getFollowersOrFollowing(LociUser user, String uid, DataSnapshot ds, Boolean isFollowing) {
@@ -112,14 +101,13 @@ public class FollowsScrollingActivity extends AppCompatActivity {
         mStaticGridView = (StaticGridView) findViewById(R.id.staticGridView);
         mStaticGridAdapter = new GridViewAdapter(this, R.layout.grid_item_layout, getData());
         mStaticGridView.setAdapter(mStaticGridAdapter);
+
         mStaticGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ImageItem item = (ImageItem) parent.getItemAtPosition(position);
-                // Create intent to load Post Activity and add the clicked image info:
+
                 Intent intent = new Intent(view.getContext(), UserProfileActivity.class);
                 intent.putExtra("uid", item.getTitle());
-                intent.putExtra("image", item.getImage());
-                //Start details activity
                 startActivity(intent);
             }
         });
@@ -128,15 +116,30 @@ public class FollowsScrollingActivity extends AppCompatActivity {
     // Prepare some dummy data for gridview
     private ArrayList<ImageItem> getData() {
         final ArrayList<ImageItem> imageItems = new ArrayList<>();
+        mUidList = mIsFollowing? mProfileUser.getmFollowing(): mProfileUser.getmFollowers();
+
         TypedArray images = getResources().obtainTypedArray(R.array.image_ids);
-        for (int i = 0; i < images.length(); i++) {
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), images.getResourceId(i, -1));
-            imageItems.add(new ImageItem(bitmap, "Image#" + i));
+        for (String uid: mUidList) {
+            imageItems.add(new ImageItem(null, getNamefromDB(uid)));
         }
         return imageItems;
     }
 
+    private String getNamefromDB(String uid) {
+        FirebaseDatabase.getInstance().getReference().child("Users").child(uid).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                mCurrUserName = dataSnapshot.getValue().toString();
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        return mCurrUserName;
+    }
 
 
 }
