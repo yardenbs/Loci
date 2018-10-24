@@ -33,6 +33,8 @@ public class UserProfileActivity extends AppCompatActivity {
     private TextView mUserEmail;
     private CircleImageView mProfileImage;
     private DatabaseReference mUsersRef;
+    private DatabaseReference mPostsref;
+
     private Boolean mIsFollow = false;
     private Boolean mIsThisUsersProfile = false;
     private String mCurrentUserId;
@@ -49,6 +51,8 @@ public class UserProfileActivity extends AppCompatActivity {
         mCurrentUserId = FirebaseAuth.getInstance().getUid();
         mProfileUserId = getIntent().getStringExtra("uid");
         mUsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        mPostsref = FirebaseDatabase.getInstance().getReference().child("Posts");
+
         mUsersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -76,11 +80,11 @@ public class UserProfileActivity extends AppCompatActivity {
     private void getFollowersAndFollowing(LociUser user, String uid, DataSnapshot ds) {
 
         for( DataSnapshot uidDataSnapshot: ds.child(uid).child("Following").getChildren()){
-            user.getmFollowing().add(uidDataSnapshot.getValue().toString());
+            user.getmFollowingUIDs().add(uidDataSnapshot.getValue().toString());
         }
 
         for( DataSnapshot uidDataSnapshot: ds.child(uid).child("Followers").getChildren()){
-            user.getmFollowers().add(uidDataSnapshot.getValue().toString());
+            user.getmFollowersUIDs().add(uidDataSnapshot.getValue().toString());
         }
 
     }
@@ -93,7 +97,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
             mFollowButton.setText("Follow");
 
-            if(mCurrentUser.getmFollowing().contains(mProfileUser.getUserId())){
+            if(mCurrentUser.getmFollowingUIDs().contains(mProfileUser.getUserId())){
                 mFollowButton.setText("Unfollow");
                 mIsFollow = true;
             }
@@ -140,6 +144,7 @@ public class UserProfileActivity extends AppCompatActivity {
                     mIsFollow = !mIsFollow;
                 }
                 else{
+                    // This is the user's profile:
                     FirebaseAuth.getInstance().signOut();
                     finish();
                     Intent intent = new Intent( getBaseContext(), SplashActivity.class);
@@ -194,9 +199,11 @@ public class UserProfileActivity extends AppCompatActivity {
 
     private void InitGridView() {
 
+
         mStaticGridView = (StaticGridView) findViewById(R.id.staticGridView);
         mStaticGridAdapter = new GridViewAdapter(this, R.layout.grid_item_layout, getData());
         mStaticGridView.setAdapter(mStaticGridAdapter);
+
         mStaticGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ImageItem item = (ImageItem) parent.getItemAtPosition(position);

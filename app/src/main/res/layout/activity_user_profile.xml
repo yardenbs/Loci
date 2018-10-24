@@ -38,7 +38,7 @@
                 android:layout_height="220dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
-                android:src="@drawable/profile_default_pic"
+                android:src="@drawable/square"
                 app:civ_border_color="#FFF"
                 app:civ_border_width="2dp"
                 app:layout_constraintEnd_toEndOf="parent"

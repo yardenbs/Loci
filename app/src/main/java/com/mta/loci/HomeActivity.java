@@ -259,7 +259,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         InitUI();
 
         //for unit testing:
-        //mUser.getmFollowing().add("jRgXmQH56qeYq9Q3fEuikSDhj133");
+        //mUser.getmFollowingUIDs().add("jRgXmQH56qeYq9Q3fEuikSDhj133");
         //
         updateUserFromDB();
 
@@ -312,8 +312,8 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mTotalPostsIds = new ArrayList<>();
         ArrayList<String> uidList = new ArrayList<>();
-        if (mUser.getmFollowing() != null) {
-            uidList = new ArrayList<>(mUser.getmFollowing());
+        if (mUser.getmFollowingUIDs() != null) {
+            uidList = new ArrayList<>(mUser.getmFollowingUIDs());
         }
         uidList.add(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
@@ -352,11 +352,11 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
 
                 for (DataSnapshot userImFollowing: dataSnapshot.child("Following").getChildren()) {
-                    mUser.getmFollowing().add(userImFollowing.getValue().toString());
+                    mUser.getmFollowingUIDs().add(userImFollowing.getValue().toString());
                 }
 
                 for (DataSnapshot userFollowsMe: dataSnapshot.child("Followers").getChildren()) {
-                    mUser.getmFollowers().add(userFollowsMe.toString());
+                    mUser.getmFollowersUIDs().add(userFollowsMe.toString());
                 }
 
                 loadFollowingPostsFromDB();

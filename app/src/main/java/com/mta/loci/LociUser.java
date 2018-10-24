@@ -34,7 +34,7 @@ public class LociUser {
         return mUserId;
     }
 
-    public ArrayList<String> getmFollowing() {
+    public ArrayList<String> getmFollowingUIDs() {
         return mFollowing;
     }
 
@@ -78,7 +78,7 @@ public class LociUser {
         mFollowing.remove(Uid);
     }
 
-    public ArrayList<String> getmFollowers() {
+    public ArrayList<String> getmFollowersUIDs() {
         return mFollowers;
     }
 
