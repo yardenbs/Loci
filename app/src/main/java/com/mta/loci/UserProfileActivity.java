@@ -209,7 +209,7 @@ public class UserProfileActivity extends AppCompatActivity {
                 ImageItem item = (ImageItem) parent.getItemAtPosition(position);
                 // Create intent to load Post Activity and add the clicked image info:
                 Intent intent = new Intent(view.getContext(), LociPostActivity.class);
-                intent.putExtra("title", item.getTitle());
+                intent.putExtra("creatorId", item.getTitle());
                 intent.putExtra("image", item.getImage());
                 //Start details activity
                 startActivity(intent);

@@ -4,12 +4,12 @@ import android.graphics.Bitmap;
 
 public class ImageItem {
     private Bitmap image;
-    private String title;
+    private String creatorId;
 
     public ImageItem(Bitmap image, String title) {
         super();
         this.image = image;
-        this.title = title;
+        this.creatorId = title;
     }
 
     public Bitmap getImage() {
@@ -21,10 +21,10 @@ public class ImageItem {
     }
 
     public String getTitle() {
-        return title;
+        return creatorId;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setTitle(String creatorId) {
+        this.creatorId = creatorId;
     }
 }
