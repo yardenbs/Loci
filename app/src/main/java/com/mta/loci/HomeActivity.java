@@ -259,7 +259,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         InitUI();
 
         //for unit testing:
-        //mUser.getmFollowingUIDs().add("jRgXmQH56qeYq9Q3fEuikSDhj133");
+        mUser.getmFollowingUIDs().add("jRgXmQH56qeYq9Q3fEuikSDhj133");
         //
         updateUserFromDB();
 
