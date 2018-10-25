@@ -34,6 +34,7 @@ public class UserProfileActivity extends AppCompatActivity {
     private CircleImageView mProfileImage;
     private DatabaseReference mUsersRef;
     private DatabaseReference mPostsref;
+    ArrayList<Post> mPostItems;
 
     private Boolean mIsFollow = false;
     private Boolean mIsThisUsersProfile = false;
@@ -66,6 +67,7 @@ public class UserProfileActivity extends AppCompatActivity {
                     mCurrentUser.getUnlockedPostIds().add(postIdSnapshot.getValue().toString());
                 }
 
+                getImageData();
                 InitUI();
             }
 
@@ -201,16 +203,16 @@ public class UserProfileActivity extends AppCompatActivity {
 
 
         mStaticGridView = (StaticGridView) findViewById(R.id.staticGridView);
-        mStaticGridAdapter = new GridViewAdapter(this, R.layout.grid_item_layout, getData());
+        mStaticGridAdapter = new GridViewAdapter(this, R.layout.grid_item_layout, mPostItems);
         mStaticGridView.setAdapter(mStaticGridAdapter);
 
         mStaticGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ImageItem item = (ImageItem) parent.getItemAtPosition(position);
+                Post item = (Post) parent.getItemAtPosition(position);
                 // Create intent to load Post Activity and add the clicked image info:
                 Intent intent = new Intent(view.getContext(), LociPostActivity.class);
-                intent.putExtra("creatorId", item.getTitle());
-                intent.putExtra("image", item.getImage());
+                intent.putExtra("creatorId", item.getmCreatorId());
+                intent.putExtra("postId", item.getId());
                 //Start details activity
                 startActivity(intent);
             }
@@ -226,15 +228,28 @@ public class UserProfileActivity extends AppCompatActivity {
         //});
     }
 
-    // Prepare some dummy data for gridview
-    private ArrayList<ImageItem> getData() {
-        final ArrayList<ImageItem> imageItems = new ArrayList<>();
-        TypedArray images = getResources().obtainTypedArray(R.array.image_ids);
-        for (int i = 0; i < images.length(); i++) {
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), images.getResourceId(i, -1));
-            imageItems.add(new ImageItem(bitmap, "Image#" + i));
-        }
-        return imageItems;
+    private void getImageData() {
+        mPostItems = new ArrayList<>();
+        DatabaseReference databasePosts = FirebaseDatabase.getInstance().getReference("Posts").child(mProfileUserId);
+        databasePosts.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for( DataSnapshot postSnapshot : dataSnapshot.getChildren())
+                {
+                    Post post = postSnapshot.getValue(Post.class);
+                    if(mIsThisUsersProfile || mCurrentUser.getmUnlockedPostIds().contains(post.getId()))
+                    {
+                        mPostItems.add(post);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
+
 
 }
