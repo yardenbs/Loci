@@ -1,7 +1,5 @@
 package com.mta.loci;
 
-import android.net.Uri;
-
 import java.util.ArrayList;
 
 public class LociUser {
@@ -42,10 +40,7 @@ public class LociUser {
         return mUnlockedPostIds;
     }
 
-
     public String getmPhotoUrl() { return mPhotoUrl; }
-
-
 
     public String getName() {
         return mName;

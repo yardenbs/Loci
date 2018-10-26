@@ -78,6 +78,9 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private ArrayList<Post> mTotalPostsIds; //all the posts of those I am following
 
+    private Boolean mIsGetLockedLociFlow = false;
+    private LatLng mWhereToZoom;
+
     private void InitUI() {
         setContentView(R.layout.activity_home);
         InitButtons();
@@ -267,9 +270,12 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         Log.d(TAG, "--> HomeActivity --> onCreate");
         InitUI();
+        if (mIsGetLockedLociFlow = getIntent().getBooleanExtra("zoom_in", false)){
+            mWhereToZoom = getIntent().getExtras().getParcelable("latLng");
+        }
 
         //for unit testing:
-        mUser.getmFollowingUIDs().add("jRgXmQH56qeYq9Q3fEuikSDhj133");
+        //mUser.getmFollowingUIDs().add("jRgXmQH56qeYq9Q3fEuikSDhj133");
         //
         updateUserFromDB();
 
@@ -313,6 +319,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
             Log.e(TAG, "mLocationPermissionsGranted: " + mLocationPermissionsGranted);
         }
 
+
         Log.d(TAG, "<-- HomeActivity <-- onCreate");
     }
 
@@ -334,7 +341,12 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
                     for (DataSnapshot post: dataSnapshot.getChildren()) {
                         mTotalPostsIds.add(post.getValue(Post.class));
                     }
+
                     addMarkers();
+
+                    if (mIsGetLockedLociFlow){
+                        moveCamera(mWhereToZoom,10);
+                    }
                 }
 
                 @Override

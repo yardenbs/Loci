@@ -10,18 +10,19 @@
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
-        android:layout_height="590dp"
+        android:layout_height="642dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:descendantFocusability="beforeDescendants"
         android:fillViewport="false"
         android:orientation="vertical"
         android:padding="10dp"
         android:scrollbars="none"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -100,11 +101,12 @@
             <com.mta.loci.StaticGridView
                 android:id="@+id/staticGridView"
                 android:layout_width="wrap_content"
-                android:layout_height="42dp"
+                android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginTop="132dp"
                 android:gravity="center"
                 android:horizontalSpacing="2dp"
                 android:isScrollContainer="false"
@@ -113,7 +115,7 @@
                 android:verticalSpacing="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/layoutUserInfo" />
+                app:layout_constraintTop_toBottomOf="parent" />
 
             <Button
                 android:id="@+id/FollowButton"

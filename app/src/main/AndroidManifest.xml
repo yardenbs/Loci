@@ -46,9 +46,6 @@
         </activity>
         <activity android:name=".LociPostActivity" />
         <activity android:name=".PostMakerActivity" />
-        <activity
-            android:name=".FriendListActivity"
-            android:label="@string/title_activity_firend_list" />
         <activity android:name=".UserProfileActivity" />
         <activity android:name=".HomeActivity" />
 

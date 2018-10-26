@@ -1,9 +1,6 @@
 package com.mta.loci;
 
 import android.content.Intent;
-import android.content.res.TypedArray;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -209,6 +206,17 @@ public class UserProfileActivity extends AppCompatActivity {
         mStaticGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Post item = (Post) parent.getItemAtPosition(position);
+
+                if(!mIsThisUsersProfile && !mCurrentUser.getmUnlockedPostIds().contains(item.getId()))
+                {
+                    // Create intent to load Post Activity and add the clicked image info:
+                    Intent intent = new Intent(view.getContext(), HomeActivity.class);
+                    intent.putExtra("zoom_in", true);
+                    intent.putExtra("latLng", item.getmLatlng());
+                    //Start details activity
+                    startActivity(intent);
+                }
+
                 // Create intent to load Post Activity and add the clicked image info:
                 Intent intent = new Intent(view.getContext(), LociPostActivity.class);
                 intent.putExtra("creatorId", item.getmCreatorId());
@@ -237,10 +245,14 @@ public class UserProfileActivity extends AppCompatActivity {
                 for( DataSnapshot postSnapshot : dataSnapshot.getChildren())
                 {
                     Post post = postSnapshot.getValue(Post.class);
-                    if(mIsThisUsersProfile || mCurrentUser.getmUnlockedPostIds().contains(post.getId()))
+                    if(!mIsThisUsersProfile && !mCurrentUser.getmUnlockedPostIds().contains(post.getId()))
                     {
-                        mPostItems.add(post);
+                        String uri = "android.resource://"+ getPackageName() +"/drawable/lock";
+                        post.setmMediaUrl(uri);
                     }
+
+                    mPostItems.add(post);
+
                 }
             }
 
