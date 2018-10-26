@@ -35,8 +35,6 @@ public class FollowsScrollingActivity extends AppCompatActivity {
     private TextView mUserName;
     private TextView mUserEmail;
     private CircleImageView mProfileImage;
-    private StaticGridView mStaticGridView;
-    private GridViewAdapter mStaticGridAdapter;
     private String mCurrUserName;
     private ArrayList<String> mUsersNamesList;
     private ArrayList<String> mUsersUidsList;
@@ -139,14 +137,13 @@ public class FollowsScrollingActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
 
-                //String itemValue = (String) mUsersNamesListView.getItemAtPosition(position);
+
                 // Get the uid of the chosen user:
                 String chosenUserUid = mUsersUidsList.get(position);
                 // Start he's profile activity:
                 Intent intent = new Intent(view.getContext(), UserProfileActivity.class);
                 intent.putExtra("uid", chosenUserUid);
                 startActivity(intent);
-                //finish();
             }
 
         });
@@ -163,8 +160,6 @@ public class FollowsScrollingActivity extends AppCompatActivity {
         if(!mProfileUser.getmPhotoUrl().equals("")){
             LociUtil.loadImage(mProfileUser.getmPhotoUrl(), mProfileImage);
         }
-
-        //InitGridView();
     }
 
     // Prepare some dummy data for gridview

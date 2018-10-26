@@ -39,7 +39,6 @@ class PostUtils {
                 .title(post.getmCreatorName());
         String mediaType = post.getmMediaType();
         mo.icon(getResourceImage(mediaType, isUnlocked, context));
-        //TODO    user.icon(); need to get the user's icon here
 
         return mo;
     }
@@ -73,25 +72,6 @@ class PostUtils {
         Location.distanceBetween(latLon1.latitude, latLon1.longitude,
                 latLon2.latitude, latLon2.longitude, result);
         return (double) result[0];
-    }
-
-    public static void getPostFromDatabase(String postId , String uid) {
-
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference databasePosts = database.getReference("Posts");
-
-        databasePosts.child(uid).child(postId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Post post= dataSnapshot.getValue(Post.class);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e(LociUtil.class.getSimpleName(), "loadPost:onCancelled", databaseError.toException());
-            }
-        });
-
     }
 
     public static Bitmap rotateImage(Bitmap bitmap, String imageFileLocation){

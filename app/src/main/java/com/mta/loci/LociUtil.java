@@ -30,16 +30,6 @@ import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOption
 
 class LociUtil {
 
-    private static LociUser mLociUser = new LociUser();
-/*
-    public static LociUser InitUserFromIntent(Intent intent) {
-        String uid = intent.getStringExtra("0");
-        LociUser retUser =  getUserFromDatabase(uid);
-
-        return retUser;
-    }
-*/
-
     public static void loadImage(String url, ImageView imageView) {
         Context context = imageView.getContext();
         Glide.with(context)
@@ -71,24 +61,6 @@ class LociUtil {
         }
 
         return null;
-    }
-
-    public static void getUserFromDatabase(String uid ) {
-
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference databaseUsers = database.getReference("Users");
-
-        databaseUsers.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                mLociUser = dataSnapshot.getValue(LociUser.class);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e(LociUtil.class.getSimpleName(), "loadPost:onCancelled", databaseError.toException());
-            }
-        });
     }
 
 

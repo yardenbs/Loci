@@ -63,8 +63,6 @@ public class UserProfileActivity extends AppCompatActivity {
                 for (DataSnapshot postIdSnapshot: dataSnapshot.child(mCurrentUserId).child("UnlockedPosts").getChildren()) {
                     mCurrentUser.getUnlockedPostIds().add(postIdSnapshot.getValue().toString());
                 }
-
-                getImageData();
                 InitUI();
             }
 
@@ -100,7 +98,6 @@ public class UserProfileActivity extends AppCompatActivity {
                 mFollowButton.setText("Unfollow");
                 mIsFollow = true;
             }
-            // todo do i follow him?
         }
         else{
             mFollowButton.setText("Logout");
@@ -113,7 +110,7 @@ public class UserProfileActivity extends AppCompatActivity {
         mUserEmail.setText(mProfileUser.getmEmail());
 
         mProfileImage = findViewById(R.id.circleImageProfile);
-        if(!mProfileUser.getmPhotoUrl().equals("")){
+       if(!mProfileUser.getmPhotoUrl().equals("")){
             LociUtil.loadImage(mProfileUser.getmPhotoUrl(), mProfileImage);
         }
 
@@ -198,62 +195,47 @@ public class UserProfileActivity extends AppCompatActivity {
 
     private void InitGridView() {
 
-
         mStaticGridView = (StaticGridView) findViewById(R.id.staticGridView);
-        mStaticGridAdapter = new GridViewAdapter(this, R.layout.grid_item_layout, mPostItems);
-        mStaticGridView.setAdapter(mStaticGridAdapter);
-
-        mStaticGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Post item = (Post) parent.getItemAtPosition(position);
-
-                if(!mIsThisUsersProfile && !mCurrentUser.getmUnlockedPostIds().contains(item.getId()))
-                {
-                    // Create intent to load Post Activity and add the clicked image info:
-                    Intent intent = new Intent(view.getContext(), HomeActivity.class);
-                    intent.putExtra("zoom_in", true);
-                    intent.putExtra("latLng", item.getmLatlng());
-                    //Start details activity
-                    startActivity(intent);
-                }
-
-                // Create intent to load Post Activity and add the clicked image info:
-                Intent intent = new Intent(view.getContext(), LociPostActivity.class);
-                intent.putExtra("creatorId", item.getmCreatorId());
-                intent.putExtra("postId", item.getId());
-                //Start details activity
-                startActivity(intent);
-            }
-        });
-
-        //mGridView.setOnTouchListener(new View.OnTouchListener(){
-        //
-        //    @Override
-        //    public boolean onTouch(View v, MotionEvent event) {
-        //        return event.getAction() == MotionEvent.ACTION_MOVE;
-        //    }
-        //
-        //});
-    }
-
-    private void getImageData() {
         mPostItems = new ArrayList<>();
+
         DatabaseReference databasePosts = FirebaseDatabase.getInstance().getReference("Posts").child(mProfileUserId);
+        mStaticGridAdapter = new GridViewAdapter( UserProfileActivity.this, R.layout.grid_item_layout, mPostItems);
+        mStaticGridView.setAdapter(mStaticGridAdapter);
         databasePosts.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for( DataSnapshot postSnapshot : dataSnapshot.getChildren())
-                {
+                for( DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Post post = postSnapshot.getValue(Post.class);
                     if(!mIsThisUsersProfile && !mCurrentUser.getmUnlockedPostIds().contains(post.getId()))
                     {
                         String uri = "android.resource://"+ getPackageName() +"/drawable/lock";
                         post.setmMediaUrl(uri);
                     }
-
                     mPostItems.add(post);
-
                 }
+
+        mStaticGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Post item = (Post) parent.getItemAtPosition(position);
+
+                        if(!mIsThisUsersProfile && !mCurrentUser.getmUnlockedPostIds().contains(item.getId()))
+                        {
+                            // Create intent to load Post Activity and add the clicked image info:
+                            Intent intent = new Intent(view.getContext(), HomeActivity.class);
+                            intent.putExtra("zoom_in", true);
+                            intent.putExtra("latLng", item.getmLatlng());
+                            //Start details activity
+                            startActivity(intent);
+                        }
+
+                        // Create intent to load Post Activity and add the clicked image info:
+                        Intent intent = new Intent(view.getContext(), LociPostActivity.class);
+                        intent.putExtra("creatorId", item.getmCreatorId());
+                        intent.putExtra("postId", item.getId());
+                        //Start details activity
+                        startActivity(intent);
+                    }
+                });
             }
 
             @Override

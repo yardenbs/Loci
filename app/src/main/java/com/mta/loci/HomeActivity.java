@@ -151,10 +151,10 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
                     public void onComplete(@NonNull Task task) {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "onComplete: found location");
-                            Location currentLocation = (Location) task.getResult();
-                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
+                            mCurrLocation = (Location) task.getResult();
+                            moveCamera(new LatLng(mCurrLocation.getLatitude(), mCurrLocation.getLongitude()),
                                     DEFAULT_ZOOM);
-                            updateLocationAddress(currentLocation);
+                            updateLocationAddress(mCurrLocation);
                         } else {
                             Log.e(TAG, "onComplete: current location is null");
                             Toast.makeText(HomeActivity.this, "Unable to get current location", Toast.LENGTH_SHORT).show();
@@ -167,7 +167,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    // refactor
+
     private void getPermissions() {
         Log.d(TAG, "getPermissions: enter");
         String[] permissions = {FINE_LOCATION,
@@ -274,9 +274,6 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
             mWhereToZoom = getIntent().getExtras().getParcelable("latLng");
         }
 
-        //for unit testing:
-        //mUser.getmFollowingUIDs().add("jRgXmQH56qeYq9Q3fEuikSDhj133");
-        //
         updateUserFromDB();
 
 
