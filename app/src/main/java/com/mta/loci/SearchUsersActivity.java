@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,7 +22,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class SearchUsersActivity extends AppCompatActivity {
@@ -63,16 +64,15 @@ public class SearchUsersActivity extends AppCompatActivity {
         Toast.makeText(this, "Started search", Toast.LENGTH_LONG).show();
 
         Query firebaseSearchQuery = mUserDatabase.orderByChild("name").startAt(searchText).endAt(searchText + "\uf8ff");
-        //Query firebaseSearchQuery = mUserDatabase.orderByChild("name").endAt(searchText + "\uf8ff");
 
         //set Options
-        FirebaseRecyclerOptions<UsersList> options =
-                new FirebaseRecyclerOptions.Builder<UsersList>()
-                        .setQuery(firebaseSearchQuery, UsersList.class)
+        FirebaseRecyclerOptions<LociUser> options =
+                new FirebaseRecyclerOptions.Builder<LociUser>()
+                        .setQuery(firebaseSearchQuery, LociUser.class)
                         .setLifecycleOwner(this)
                         .build();
 
-        adapter = new FirebaseRecyclerAdapter<UsersList, UserviewHolder>(options) {
+        adapter = new FirebaseRecyclerAdapter<LociUser, UserviewHolder>(options) {
             @NonNull
             @Override
             public UserviewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -81,10 +81,10 @@ public class SearchUsersActivity extends AppCompatActivity {
             }
 
             @Override
-            protected void onBindViewHolder(@NonNull UserviewHolder holder, int position, @NonNull UsersList model) {
+            protected void onBindViewHolder(@NonNull UserviewHolder holder, int position, @NonNull LociUser model) {
 
                 holder.setName(model.getName());
-                holder.setMcCircleImageView(model.getImage());
+                holder.setImageView(model.getmPhotoUrl());
 
                 final String user_id = getRef(position).getKey();
 
@@ -101,14 +101,15 @@ public class SearchUsersActivity extends AppCompatActivity {
             }
         };
 
+        mResultList.setLayoutManager(new LinearLayoutManager(this));
         mResultList.setAdapter(adapter);
+
 
     }
 
     private void closeKeyboard(){
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow( getCurrentFocus().getWindowToken(), 0);
-
     }
 
 
@@ -116,10 +117,8 @@ public class SearchUsersActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-
         //important for fibrebase database ui
         adapter.startListening();
-
 
     }
 
@@ -134,7 +133,7 @@ public class SearchUsersActivity extends AppCompatActivity {
     public static class UserviewHolder extends RecyclerView.ViewHolder {
         View mView;
         TextView mdisplayname;
-        CircleImageView mcCircleImageView;
+        ImageView mImageView;
 
 
         public UserviewHolder(View itemView) {
@@ -142,7 +141,7 @@ public class SearchUsersActivity extends AppCompatActivity {
             mView = itemView;
 
             mdisplayname = (TextView) mView.findViewById(R.id.UserName);
-            mcCircleImageView = (CircleImageView) mView.findViewById(R.id.ProfilePic);
+            mImageView = (ImageView) mView.findViewById(R.id.ProfilePic);
 
 
 
@@ -153,16 +152,13 @@ public class SearchUsersActivity extends AppCompatActivity {
 
         }
 
-        public void setMcCircleImageView(final String img_uri){
+        public void setImageView(final String img_uri){
 
-            mcCircleImageView.setImageResource(R.drawable.profile_default_pic);
-//            if (!img_uri.equals("")){
-//                // load user image
-//
-//            }else{
-//                //load default image
-//
-//            }
+            if (img_uri!=null && !img_uri.equals("")){
+                LociUtil.loadImage(img_uri, mImageView);
+            }else{
+                mImageView.setImageResource(R.drawable.profile_default_pic);
+            }
         }
     }
 }

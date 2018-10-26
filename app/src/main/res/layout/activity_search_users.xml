@@ -6,6 +6,19 @@
     android:layout_height="match_parent"
     tools:context=".SearchUsersActivity">
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/SearchButton"
+        android:layout_width="46dp"
+        android:layout_height="43dp"
+        android:layout_marginEnd="48dp"
+        android:layout_marginRight="48dp"
+        android:clickable="true"
+        android:scaleType="fitCenter"
+        app:backgroundTint="?android:attr/textColorTertiaryInverse"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/SerachField"
+        app:srcCompat="@drawable/search" />
+
     <TextView
         android:id="@+id/TitleLable"
         android:layout_width="298dp"
@@ -43,25 +56,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/TitleLable" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/SearchButton"
-        android:layout_width="46dp"
-        android:layout_height="43dp"
-        android:layout_marginEnd="56dp"
-        android:layout_marginRight="56dp"
-        android:layout_marginTop="12dp"
-        android:clickable="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/SerachField"
-        app:srcCompat="@android:drawable/ic_menu_search" />
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/ResultList"
-        android:layout_width="364dp"
-        android:layout_height="441dp"
+        android:layout_width="357dp"
+        android:layout_height="477dp"
         android:layout_marginLeft="28dp"
         android:layout_marginStart="28dp"
         android:layout_marginTop="28dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/SerachField" />
+
 </android.support.constraint.ConstraintLayout>
