@@ -63,7 +63,8 @@
         <activity
             android:name=".FollowsScrollingActivity"
             android:label="@string/title_activity_follows_scrolling"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".SearchUsersActivity"></activity>
     </application>
 
 </manifest>

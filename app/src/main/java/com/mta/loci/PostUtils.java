@@ -1,12 +1,16 @@
 package com.mta.loci;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.location.Location;
 import android.media.ExifInterface;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
@@ -29,12 +33,31 @@ class PostUtils {
     }
 
     //generate markerOptions object from the post provided
-    public static MarkerOptions GenerateMarkerOptions(Post post) {
+    public static MarkerOptions GenerateMarkerOptions(Post post, boolean isUnlocked, Context context) {
+
         MarkerOptions mo = new MarkerOptions().position(post.getmLatlng())
                 .title(post.getmCreatorName());
+        String mediaType = post.getmMediaType();
+        mo.icon(getResourceImage(mediaType, isUnlocked, context));
         //TODO    user.icon(); need to get the user's icon here
 
         return mo;
+    }
+
+    private static BitmapDescriptor getResourceImage(String mediaType, boolean isUnlocked, Context context) {
+
+        Bitmap b = null;
+        if(isUnlocked){
+            if ( mediaType.equals("photo")){
+                b =  BitmapFactory.decodeResource(context.getResources(), R.drawable.photo);
+            }
+        }
+        else{
+            b = BitmapFactory.decodeResource(context.getResources(),R.drawable.lock);
+        }
+        b = Bitmap.createScaledBitmap(b, 100, 100, false);
+
+        return BitmapDescriptorFactory.fromBitmap(b);
     }
 
     public static boolean AttemptUnlock(Location origin, Post post){

@@ -72,10 +72,8 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
     // User needs to be initialized in OnCreate: //fix
     private  LociUser mUser = new LociUser();
 
-    private Button mButtonHome;
     private Button mButtonSearch;
     private Button mButtonPost;
-    private Button mButtonFeed;
     private Button mButtonUserProfile;
 
     private ArrayList<Post> mTotalPostsIds; //all the posts of those I am following
@@ -86,10 +84,8 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void InitButtons() {
-        mButtonHome = (Button) findViewById(R.id.buttonHome);
         mButtonSearch = (Button) findViewById(R.id.buttonSearch);
         mButtonPost = (Button) findViewById(R.id.buttonPost);
-        mButtonFeed = (Button) findViewById(R.id.buttonFeed);
         mButtonUserProfile = (Button) findViewById(R.id.buttonUserProfile);
 
         mButtonUserProfile.setOnClickListener(new View.OnClickListener() {
@@ -108,6 +104,14 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
                 intent.putExtra("uid", LociUtil.getCurrentUserId());
                 if (mCurrLocation != null)
                     intent.putExtra("latLng", new LatLng(mCurrLocation.getLatitude(),mCurrLocation.getLongitude()));
+                startActivity(intent);
+            }
+        });
+
+        mButtonSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), SearchUsersActivity.class);
                 startActivity(intent);
             }
         });
@@ -209,6 +213,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void addMarkers() {
         //assume from onCreate that user has all data from firebase
 
+        boolean isUnlocked = true;
 
         for (Post post : mTotalPostsIds) {
 
@@ -216,7 +221,12 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
                 continue;
             }
 
-            MarkerOptions mo = PostUtils.GenerateMarkerOptions(post);
+            if( !mUser.getmUnlockedPostIds().contains(post.getId())){
+                isUnlocked = false;
+            }
+
+            MarkerOptions mo = PostUtils.GenerateMarkerOptions(post, isUnlocked, this);
+            isUnlocked = true;
             Marker currMarker = gmap.addMarker(mo);
             currMarker.setTag(post);
         }

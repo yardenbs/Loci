@@ -33,19 +33,6 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <Button
-            android:id="@+id/buttonHome"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:fontFamily="sans-serif"
-            android:text="HOME"
-            android:textColor="#C06CB4"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
             android:id="@+id/buttonSearch"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
@@ -66,19 +53,6 @@
             android:layout_weight="1"
             android:fontFamily="sans-serif"
             android:text="POST"
-            android:textColor="#C06CB4"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:id="@+id/buttonFeed"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:fontFamily="sans-serif"
-            android:text="FEED"
             android:textColor="#C06CB4"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
