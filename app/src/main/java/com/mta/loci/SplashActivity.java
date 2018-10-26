@@ -11,8 +11,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 
@@ -23,12 +26,14 @@ public class SplashActivity extends Activity {
 
     private static int SPLASH_TIME_OUT = 4000;
     private static int RC_SIGN_IN = 1;
+    DatabaseReference mUsersRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme_Launcher);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        mUsersRef = FirebaseDatabase.getInstance().getReference("Users");
         login();
     }
 
@@ -40,15 +45,18 @@ public class SplashActivity extends Activity {
 
         if(requestCode == RC_SIGN_IN){
             if(resultCode == RESULT_OK){
-                FirebaseInstanceId.getInstance().getInstanceId()
-                        .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                                // Get new Instance ID token
-                                String token = task.getResult().getToken();
-                                writeNewUser(fUser, token);
-                            }
-                        });
+                mUsersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+                        if (!snapshot.child(fUser.getUid()).exists()) {
+                            writeNewUser(fUser);
+                        }
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
                 startHomeActivity();
             }
             else if(resultCode == RESULT_CANCELED){
@@ -89,16 +97,21 @@ public class SplashActivity extends Activity {
                 RC_SIGN_IN);
     }
 
-    private void writeNewUser(FirebaseUser fUser, String token) {
-        DatabaseReference usersRef = FirebaseDatabase.getInstance()
-                                    .getReference("Users");
-        //TODO: fix this photo url issue:
-        String photoUrl;
-        photoUrl = fUser.getPhotoUrl() == null ? "" : fUser.getPhotoUrl().toString();
-        // = "https://imagecdn.acast.com/howdowefixit/image.jpg?w=300&h=300";
-        LociUser lociUser = new LociUser(fUser.getUid(),fUser.getEmail(),fUser.getDisplayName(),
-                                        token, photoUrl);
-        usersRef.child(fUser.getUid()).setValue(lociUser);
+    private void writeNewUser(final FirebaseUser fUser) {
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        // Get new Instance ID token
+                        String token = task.getResult().getToken();
+                        String photoUrl;
+                        photoUrl = fUser.getPhotoUrl() == null ? "" : fUser.getPhotoUrl().toString();
+                        // = "https://imagecdn.acast.com/howdowefixit/image.jpg?w=300&h=300";
+                        LociUser lociUser = new LociUser(fUser.getUid(),fUser.getEmail(),fUser.getDisplayName(),
+                                token, photoUrl);
+                        mUsersRef.child(fUser.getUid()).setValue(lociUser);
+                    }
+                });
     }
 }
 
