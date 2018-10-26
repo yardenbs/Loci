@@ -1,6 +1,5 @@
 package com.mta.loci;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -48,9 +47,9 @@ public class SearchUsersActivity extends AppCompatActivity {
         mSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                closeKeyboard();
                 String searchText = mSearchField.getText().toString();
                 firebaseUserSearch(searchText);
-            
             }
         });
 
@@ -107,13 +106,9 @@ public class SearchUsersActivity extends AppCompatActivity {
     }
 
     private void closeKeyboard(){
-        View view = this.getCurrentFocus();
-        if (view != null){
-            InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (inputMethodManager != null) {
-                inputMethodManager.hideSoftInputFromInputMethod(view.getWindowToken(), 0);
-            }
-        }
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow( getCurrentFocus().getWindowToken(), 0);
+
     }
 
 
